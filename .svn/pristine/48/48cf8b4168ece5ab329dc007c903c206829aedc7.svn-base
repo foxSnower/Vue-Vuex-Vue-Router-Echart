@@ -1,0 +1,25 @@
+<template>
+  <div>
+    <Panel></Panel>
+    <router-view/>
+    <BottomTab></BottomTab>
+    <MySlideLeft></MySlideLeft>
+  </div>
+</template>
+
+<script>
+import Panel from '@/components/Panel'
+import MyTable from '@/components/MyTable'
+import BottomTab from '@/components/BottomTab'
+import MySlideLeft from '@/components/MySlideLeft'
+export default {
+  name: 'index',
+  components: {
+    Panel,
+    MyTable,
+    BottomTab,
+    MySlideLeft
+  }
+}
+
+</script>

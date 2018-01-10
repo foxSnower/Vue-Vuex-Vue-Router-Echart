@@ -1,0 +1,98 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+/**
+ * [state description]
+ * @type {Object}
+ */
+// 这里写的是全局变量的初始值
+const state = {
+  updateTime:'',
+  showMySlideLeft:false,
+  dateSelect:{
+    updateTimeSelect:'日新增',
+    showDateSelect:false,
+    startTime:'',
+    endTime:''
+  },
+
+  showMyBrandSelect:false,
+  showMyCarSelect:false,
+  headerTitle:'业绩战报',
+  isLoading: false,
+  direction: 'forward',
+  toast: {
+    showToast: false,
+    title: ''
+  },
+  alert: {
+    showAlert: false,
+    isConfirm: false,
+    title: '',
+    fn: ''
+  },
+  noneObject: {
+    show: false,
+    text: ''
+  },
+}
+/**
+ * [mutations description]
+ * @type {Object}
+ */
+// 这里写的是全局变量发生变化后取代原来的值
+const mutations = {
+  updateLoading(state, payload) {
+    state.isLoading = payload.isLoading
+  },
+  updateDirection(state, payload) {
+    state.direction = payload.direction
+  },
+  toast(state, payload) {
+    state.toast.showToast = payload.showToast
+    state.toast.title = payload.title
+  },
+  updateAlert(state, payload) {
+    state.alert.showAlert = payload.showAlert
+    state.alert.isConfirm = payload.isConfirm
+    state.alert.title = payload.title
+    state.alert.fn = payload.fn
+  },
+  showMyBrandSelect(state, payload) {
+    state.showMyBrandSelect = payload.showMyBrandSelect
+  },
+  showMyCarSelect(state,payload){
+    state.showMyCarSelect= payload.showMyCarSelect
+  },
+  dateSelect(state,payload){//改变值
+    state.dateSelect.updateTimeSelect= payload.updateTimeSelect
+    state.dateSelect.showDateSelect= payload.showDateSelect
+    state.dateSelect.startTime= payload.startTime
+    state.dateSelect.endTime= payload.endTime
+  },
+  showMySlideLeft (state,payload){
+    state.showMySlideLeft= payload
+  },
+  updateTime (state,payload){
+    state.updateTime= payload
+  },
+  updateToast(state, payload) {
+    state.toast = payload.toast
+  },
+}
+/**
+ * [actions description]
+ * @type {Object}
+ */ 
+const actions = {
+  updateToast({commit}, toast) {commit({type: 'updateToast',toast:toast})},
+}
+
+// 声明vuex中的几个模块，保证其可以全局使用
+export default new Vuex.Store({
+  state,
+  mutations,
+  actions,
+})

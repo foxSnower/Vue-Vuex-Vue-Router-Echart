@@ -1,0 +1,195 @@
+<template>
+  <transition name="bounce">
+
+    <div class="slide-up">
+      <div class="select-mask" @click.preventDefault @click="onClickCancel"></div>
+
+        <div class="select">
+          <div class="select-header">
+            <div class="left" @click.preventDefault @click="onClickCancel" >取消</div>
+            <div class="center">
+
+                <span>选择查看品牌{{title}}({{selectedLength}}/{{list.length}})</span>
+
+            </div>
+            <div class="right" @click="onClickSubmit">确定</div>
+          </div>
+          <div class="select-content">
+            <div class="items" v-for="(item,index) in list" >
+              <span :data-index="index" @click="setListCheck(index)" :class="{active: item.check==true}">
+              {{ item.label }}
+              </span>
+            </div>
+          </div>
+        </div>
+    </div>
+  </transition>
+
+</template>
+<script>
+  export default {
+    name:'MyBrandSelect',
+    data(){
+      return{
+        itemSelected:{},
+        list: [
+          {check: false, label: '爱上大声大声道'},
+          {check: false, label: '2'},
+          {check: false, label: '3'},
+          {check: false, label: '4'},
+          {check: false, label: '5'},
+          {check: false, label: '6'},
+          {check: false, label: '7'},
+          {check: false, label: '8'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'}
+        ],
+        selectedLength:0,
+        selectedBrand:[]
+      }
+    },
+
+    props:{
+      headerTransition: {
+        type: String,
+        default: 'header-fade-in-right'
+      },
+      title: String
+    },
+    computed:{},
+    methods:{
+      onClickCancel(){
+        this.$store.commit('showMyBrandSelect',false)
+      },
+      setListCheck: function(idx) {
+        const check = this.list[idx].check;
+        this.list[idx].check = check === true ? false : true;
+        let length= 0 ;
+        this.list.forEach((y,index)=>{
+          if(y.check==true){
+            length++;
+          }
+        });
+        this.selectedLength=length;
+      },
+      onClickSubmit(){
+        this.selectedBrand=[];
+        this.list.forEach((y,index)=>{
+          if(y.check==true){
+            this.selectedBrand.push(y.label)
+          }
+        })
+        console.log(this.selectedBrand);
+      }
+    }
+  }
+</script>
+<style lang="less" scoped="scoped">
+  @import '../styles/var.less';
+  .slide-up{
+    .select-mask{
+      z-index:99;
+      background-color: black;
+      opacity:0.5;
+      position:fixed;
+      bottom: 0;
+      height:100%;
+      width: 100%;
+    }
+    .select{
+      z-index:100;
+      position:fixed;
+      bottom:0;
+      height:40%;
+      width: 100%;
+      .select-header{
+        height:@normalHeight;
+        line-height:@normalHeight;
+        position: relative;
+        font-size:@normalSize;
+        color: @themeColor;
+        background-color: #fff;
+        text-align: center;
+        .left{
+          position:absolute;
+          width: 70px;
+          top:0;
+          left: 0;
+        }
+        .center{
+          color: #000;
+        }
+        .right{
+          position: absolute;
+          right:0;
+          top: 0;
+          width: 70px;
+        }
+      }
+      .select-header:before{
+        .setBottomLine()
+      }
+      .select-content{
+        height: 83%;
+        background-color: #fff;
+        border-bottom: 1px solid @borderColor;
+        overflow: auto;
+        .items{
+          width: 25%;
+          height: 20%;
+          font-size:@normalSize;
+          text-align: center;
+          float: left;
+          span{
+            width: 80%;
+            height: 70%;
+            overflow: hidden;
+            margin-top:5px;
+            /*padding:5px 20px;*/
+            display: inline-block;
+            border: 1px solid @borderColor;
+          }
+        }
+      }
+    }
+    .active{
+      background-color: #ccc;
+    }
+  }
+
+
+  .bounce-enter-active {
+    animation: bounce-in .5s;
+  }
+  .bounce-leave-active {
+    animation: bounce-in .5s reverse;
+  }
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+</style>

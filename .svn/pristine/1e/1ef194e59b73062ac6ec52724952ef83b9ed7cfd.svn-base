@@ -1,0 +1,69 @@
+<template>
+  <div>
+    <MyTable :data="data"></MyTable>
+    <div class="line"></div>
+    <MyTable :data="data2"></MyTable>
+  </div>
+</template>
+<script>
+import api from '@/api/api.js'
+import MyTable from '@/components/MyTable'
+export default {
+  name: 'indexSale',
+  data() {
+    return {
+    	data2:[{
+          type: 2,
+          lable: '新增意向',
+          total: '3000',
+          more: 1,
+        },
+        {
+          type: 2,
+          lable: '线索',
+          total: '3000',
+          more: 0,
+        }],
+      data: [{
+          type: 1,
+          head: true,
+          lable: '数据',
+          day: '日新增',
+          month: '月累计',
+          monthRate: '达成率',
+          year: '年累计',
+          yearRate: '达成率',
+          more: 0,
+        }, {
+          type: 1,
+          lable: '线索',
+          day: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 1,
+        },
+        {
+          type: 1,
+          lable: '线索',
+          day: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 0,
+        }
+      ]
+    }
+  },
+  components: {
+    MyTable,
+  }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+
+</style>

@@ -1,0 +1,222 @@
+<template>
+  <div class="report">
+    <div class="fixed-box">
+      <div class="fixed" id="FixedObj">
+        <MyTab></MyTab>
+        <Echart :updateOption="updateOption"></Echart>
+      </div>
+    </div>
+    <MyTable :tableData="tableData"></MyTable>
+    <DateSelect></DateSelect>
+    <MyBrandSelect></MyBrandSelect>
+    <MyCarSelect></MyCarSelect>
+  </div>
+</template>
+<script>
+import { mapState ,mapActions} from 'vuex'
+import PublicMethods from '@/utils/PublicMethods'
+import MyTab from '@/components/MyTab'
+import Echart from '@/components/Echart'
+import MyTable from '@/components/MyTable'
+import DateSelect from '@/components/DateSelect'
+import MyBrandSelect from '@/components/MyBrandSelect'
+import MyCarSelect from '@/components/MyCarSelect'
+export default {
+  name: 'publicPage',
+  data() {
+    return {
+      updateOption: {
+        XData: [],
+        YDataAdd: [],
+        YDataRate: [],
+        YDataTongbi: [],
+        YDataHuanbi: [],
+        YDataCount: [],
+        legend: [], // 图例名称
+      }
+    }
+  },
+  props: ['tableData'],
+  components: {
+    MyTab,
+    Echart,
+    MyTable,
+    DateSelect,
+    MyBrandSelect,
+    MyCarSelect
+  },
+  watch: {
+    XData(newVal) {
+      this.updateOption.XData = newVal;
+    },
+    YData(newVal) {
+      this.updateOption.YDataAdd = newVal.add;
+      this.updateOption.YDataRate = newVal.rate;
+      this.updateOption.YDataTongbi = newVal.tongbi;
+      this.updateOption.YDataHuanbi = newVal.huanbi;
+      this.updateOption.YDataCount = newVal.count;
+      this.updateOption.legend = newVal.legend; // 图例名称
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.loadPage();
+    })
+  },
+  // destroyed() {
+  //   this.updateDateSelect({
+  //     checkWayName: '月累计',
+  //     checkWay: '2', //2、日新增2、月累计2、年累计4、其他时间段
+  //     startTime: '',
+  //     endTime: ''
+  //   })
+  // },
+  methods: {
+    ...mapActions(['updateDateSelect']),
+    loadPage() {
+      //设置图表浮动高度
+      let obj = document.getElementById('FixedObj');
+      let obj2 = document.getElementsByClassName('fixed-box')[0];
+      obj2.style.height = obj.offsetHeight + 'px';
+    }
+  },
+  computed: {
+    ...mapState({
+      dateSelect: state => state.dateSelect,
+    }),
+    //X轴
+    XData() {
+      let XData = [];
+      if (this.tableData != null) {
+        this.tableData.forEach((x, index) => {
+          if (index >= 1) {
+            // console.log(x.busName)
+            XData.push(x.busName || x.name);
+          }
+        })
+        return XData
+      }
+    },
+    YData() {
+      let add = [];
+      let rate = [];
+      let tongbi = [];
+      let huanbi = [];
+      let count = [];
+      let legend = [];
+      if (this.tableData != null) {
+        this.tableData.forEach((x, index) => {
+          //初始化isCount = false
+          // x.isCount = false;
+          if (index >= 1) {
+            switch (this.dateSelect.checkWay) { //1、日新增2、月累计3、年累计4、其他时间段
+              case '1': //日新增只有数量
+                add.push(x.dayAdd);
+                legend = ['日新增'];
+                //判断是否为选择时间段的数据，是设置isCount = true
+                x.isCount = false;
+                this.tableData[0].isCount = false;
+                break;
+              case '2': //月累计有数量、达成率、同比、环比
+                add.push(x.monthAdd);
+                rate.push(x.monthRate);
+                tongbi.push(x.tongbi);
+                huanbi.push(x.huanbi);
+                legend = ['月累计', '达成率', '同比', '环比'];
+                //判断是否为选择时间段的数据，是设置isCount = true
+                x.isCount = false;
+                this.tableData[0].isCount = false;
+                break;
+              case '3': //年累计有数量、达成率
+                add.push(x.yearAdd);
+                rate.push(x.yearRate);
+                legend = ['年累计', '达成率'];
+                //判断是否为选择时间段的数据，是设置isCount = true
+                x.isCount = false;
+                this.tableData[0].isCount = false;
+                break;
+              case '4': //其他时间段只有数量
+
+                // this.$emit('getCount');
+                count.push(x.count);
+                legend = ['统计'];
+                //判断是否为选择时间段的数据，是设置isCount = true
+                x.isCount = true;
+                this.tableData[0].isCount = true;
+                break;
+              default:
+                break;
+            }
+          }
+        })
+      }
+      return {
+        add,
+        rate,
+        tongbi,
+        huanbi,
+        count,
+        legend
+      }
+    }
+  }
+}
+
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+@import '../styles/var';
+.fixed {
+  position: fixed;
+  width: 100%;
+  top: 50px;
+  z-index: 1;
+  background: #fff;
+  /* .change-tab {
+    background-color: @while;
+    text-align: center;
+    height: 44px;
+    line-height: 44px;
+    width: 100%;
+    border-bottom: 1px solid @borderColor;
+    .tab {
+      margin: 0 35px;
+      span {
+        display: inline-block;
+        height: 100%;
+        &.active {
+          border-bottom: 2px solid @themeColor;
+          color: @themeColor;
+        }
+      }
+    }
+  }*/
+}
+
+
+
+
+
+/*.select {
+  margin: 15px;
+  span {
+    border: 1px solid @borderColor;
+    display: inline-block;
+    line-height: 35px;
+    text-indent: 10px;
+    border-radius: 44px;
+    .icon-sanjiaoxing {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    +span {
+      margin-left: 10px;
+    }
+  }
+}
+
+.auto-font {
+  font-size: @tinySize;
+}*/
+
+</style>

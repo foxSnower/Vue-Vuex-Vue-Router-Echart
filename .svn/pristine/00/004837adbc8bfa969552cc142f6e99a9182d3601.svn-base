@@ -1,0 +1,148 @@
+<template>
+  <div class="header">
+    <div class="fixed">
+      <div class="left" @click.preventDefault @click="onClickBack"><i class="iconfont icon-fanhui"></i>返回</div>
+      <div class="center">
+        <transition :name="headerTransition">
+          <!-- <span v-show="$route.name">{{$route.name}}</span> -->
+          <div class="sub-title">
+            <span v-show="$route.name">{{$route.name}}</span>
+            <span class="sub" v-show="$route.name">{{$route.meta.title}}</span>
+          </div>
+        </transition>
+        <!-- <transition :name="headerTransition" v-else>
+          <div class="sub-title">
+            <span v-show="$route.name">{{$route.name}}</span>
+            <span class="sub" v-show="$route.name">{{$route.meta.title}}</span>
+          </div>
+        </transition> -->
+      </div>
+      <div class="right"></div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  name: "header",
+  props: {
+    headerTransition: {
+      type: String,
+      default: 'header-fade-in-right'
+    },
+    title: String
+  },
+  computed: {
+    _leftOptions() {
+      return {
+        preventGoBack: false
+      }
+    }
+  },
+  methods: {
+    onClickBack() {
+      if (this._leftOptions.preventGoBack) {
+        this.$emit('on-click-back')
+      } else {
+        this.$router ? this.$router.back() : window.history.back()
+      }
+    }
+  }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var.less';
+.header {
+  height: @normalHeight;
+  text-align: center;
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: @normalHeight;
+  line-height: @normalHeight;
+  background-color: @while;
+  z-index: 99;
+  /*  &:after{
+    .setBottomLine();
+  }*/
+}
+
+.center {
+  text-align: center;
+  font-size: 1.8rem;
+  margin: 0 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  >span {
+    display: inline-block;
+  }
+}
+
+.left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: @normalHeight;
+  z-index: 1;
+}
+
+.right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: @normalHeight;
+  z-index: 1;
+}
+
+.sub-title {
+  span {
+    display: block;
+    line-height: 40px;
+  }
+  .sub {
+    position: relative;
+    top: -10px;
+    line-height: 20px;
+    font-size: @tinySize;
+    color: @lighterColor;
+  }
+}
+
+
+.header-fade-in-right-enter-active {
+  animation: fadeinR .5s;
+}
+
+.header-fade-in-left-enter-active {
+  animation: fadeinL .5s;
+}
+
+@keyframes fadeinR {
+  0% {
+    opacity: 0;
+    transform: translateX(150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeinL {
+  0% {
+    opacity: 0;
+    transform: translateX(-150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+</style>

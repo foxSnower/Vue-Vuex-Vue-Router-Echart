@@ -1,0 +1,60 @@
+<template>
+  <div>
+    <!--<div>{{data}}1122</div>-->
+    <button @click="shows = !shows">123123123</button>
+    <p>{{shows}}</p>
+
+    <transition name="slide-fade">
+      <MyBrandSelect v-if="shows"></MyBrandSelect>
+    </transition>
+  </div>
+</template>
+<script>
+import api from '@/api/api.js'
+import MyBrandSelect from '@/components/MyCarSelect'
+// import axios from 'axios'
+export default {
+  name: 'personnalCenter',
+  data(){
+    return {
+      shows:true,
+      data:null
+    }
+  },
+  components:{
+    MyBrandSelect
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.loadPage();
+    })
+  },
+  methods: {
+    loadPage() {
+      api.GET_TEST({
+        type: 'top',
+        key:'7f45725a9dc9c052aca7fbca56b5ddc7'
+      }).then(res => {
+        this.data = res.result;
+        console.log(res)
+      })
+    }
+  }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+</style>

@@ -1,0 +1,129 @@
+<template>
+  <div class="report">
+    <div class="fixed-box">
+      <div class="fixed" id="FixedObj">
+        <MyTab tabType="stock"></MyTab>
+        <Echart :updateOption="updateOption"></Echart>
+      </div>
+    </div>
+    <MyTable :tableData="tableData"></MyTable>
+    <!-- <StockDateSelect></StockDateSelect> -->
+    <MyBrandSelect></MyBrandSelect>
+    <MyCarSelect></MyCarSelect>
+  </div>
+</template>
+<script>
+import { mapState } from 'vuex'
+import PublicMethods from '@/utils/PublicMethods'
+import MyTab from '@/components/MyTab'
+import Echart from '@/components/Echart'
+import MyTable from '@/components/MyTable'
+// import StockDateSelect from '@/components/StockDateSelect'
+import MyBrandSelect from '@/components/MyBrandSelect'
+import MyCarSelect from '@/components/MyCarSelect'
+export default {
+  name: 'publicStockPage',
+  data() {
+    return {
+      updateOption: {
+        XData: [],
+        YDataAdd: [],
+        YDataRate: [],
+        YDataTongbi: [],
+        YDataHuanbi: [],
+        YDataCount: [],
+        legend: [], // 图例名称
+      }
+    }
+  },
+  props: ['tableData'],
+  components: {
+    MyTab,
+    Echart,
+    MyTable,
+    // StockDateSelect,
+    MyBrandSelect,
+    MyCarSelect
+  },
+  watch: {
+    XData(newVal) {
+      this.updateOption.XData = newVal;
+    },
+    YData(newVal) {
+      this.updateOption.YDataAdd = newVal.add;
+      this.updateOption.YDataRate = newVal.rate;
+      this.updateOption.YDataTongbi = newVal.tongbi;
+      this.updateOption.YDataHuanbi = newVal.huanbi;
+      this.updateOption.YDataCount = newVal.count;
+      this.updateOption.legend = newVal.legend; // 图例名称
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.loadPage();
+    })
+  },
+  methods: {
+    loadPage() {
+      //设置图表浮动高度
+      let obj = document.getElementById('FixedObj');
+      let obj2 = document.getElementsByClassName('fixed-box')[0];
+      obj2.style.height = obj.offsetHeight + 'px';
+    }
+  },
+  computed: {
+    ...mapState({
+      dateSelect: state => state.dateSelect,
+    }),
+    //X轴
+    XData() {
+      let XData = [];
+      if (this.tableData != null) {
+        this.tableData.forEach((x, index) => {
+          if (index >= 1) {
+            // console.log(x.busName)
+            XData.push(x.busName || x.name);
+          }
+        })
+        return XData
+      }
+    },
+    YData() {
+      let add = [];
+      let rate = [];
+      let tongbi = [];
+      let huanbi = [];
+      let count = [];
+      let legend = [];
+      if (this.tableData != null) {
+        this.tableData.forEach((x, index) => {
+          if (index > 0) {
+            count.push(x.count);
+            legend = ['统计'];
+          }
+        })
+      }
+      return {
+        add,
+        rate,
+        tongbi,
+        huanbi,
+        count,
+        legend
+      }
+    }
+  }
+}
+
+</script>
+<style lang="less" scoped>
+@import '../styles/var';
+.fixed {
+  position: fixed;
+  width: 100%;
+  top: 50px;
+  z-index: 1;
+  background: #fff;
+}
+
+</style>

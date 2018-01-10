@@ -1,0 +1,68 @@
+<template>
+  <publicPage :tableData="tableData"></publicPage>
+</template>
+<script>
+import api from '@/api/api.js'
+import { mapState } from 'vuex'
+import DealWithData from '@/utils/DealWithData'
+import publicPage from '@/pages/publicPage'
+let saleType = '';
+
+export default {
+  name: 'saleLowerArea',
+  data() {
+    return {
+      tableData: [{
+        head: true,
+        busName: '大区',
+        dayAdd: '日新增',
+        monthAdd: '月累计',
+        monthRate: '达成率',
+        yearAdd: '年累计',
+        yearRate: '达成率',
+        more: 0
+      }],
+      apiData2: []
+    }
+  },
+  components: {
+    publicPage
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.loadPage();
+    })
+  },
+  methods: {
+    loadPage() {
+    	saleType = this.$route.query.saleType;
+    	console.log(saleType);
+      if (this[saleType] == null) {
+        // let name = 'SALE_XIANSUO_AREA';
+        api[saleType]({}).then(res => {
+          this.dealData(res);
+        })
+      } else {
+          this.dealData(this[saleType]);
+      }
+    },
+    dealData(res) {
+      if (res.status == 0) {
+        this.$store.commit(saleType, res);
+        res.data.forEach((x, index) => {
+          DealWithData.dealWithData(x);
+          this.tableData.push(x);
+        })
+      } else {
+        console.log(res.message);
+      }
+    }
+  },
+  computed:{
+    ...mapState({
+      [saleType]:state=>state[saleType]
+    })
+  }
+}
+
+</script>

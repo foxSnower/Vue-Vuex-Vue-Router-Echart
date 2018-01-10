@@ -1,0 +1,248 @@
+<template>
+  <div class="report">
+    <div class="fixed">
+      <div class="change-tab">
+        <div class="f-flex tab">
+          <div class="f-item" @click="active=1"><span :class="{active:active==1}">按组织</span></div>
+          <div class="f-item" @click="active=2"><span :class="{active:active==2}">按品牌</span></div>
+          <div class="f-item" @click="active=3"><span :class="{active:active==3}">按车系</span></div>
+        </div>
+      </div>
+      <div class="select">
+        <!--从全局中拿出：dateselect.updateTimeSelect-->
+        <span v-on:click="showDateSelect">{{dateSelect.updateTimeSelect}}<i class="iconfont icon-sanjiaoxing"></i></span>
+        <span v-if="active==2" @click="$store.commit('showMyBrandSelect',true)">品牌<i class="iconfont icon-sanjiaoxing"></i></span>
+        <span v-if="active==3" @click="$store.commit('showMyCarSelect',true)">车系<i class="iconfont icon-sanjiaoxing"></i></span>
+      </div>
+      <Echart :option="option"></Echart>
+    </div>
+    <MyTable :data="data"></MyTable>
+    <SelectDate></SelectDate>
+    <MyBrandSelect v-if="showMyBrandSelect"></MyBrandSelect>
+    <MyCarSelect v-if="showMyCarSelect"></MyCarSelect>
+  </div>
+</template>
+<script>
+import { mapState } from 'vuex'
+import Echart from '@/components/Echart'
+import MyTable from '@/components/MyTable'
+import PublicSetEChartVar from '@/utils/PublicSetEChartVar'
+import SelectDate from '@/components/SelectDate'
+import MyBrandSelect from '@/components/MyBrandSelect'
+import MyCarSelect from '@/components/MyCarSelect'
+export default {
+  name: 'saleLargeArea',
+  data() {
+    return {
+      active: 1,
+      isShow:false,
+      data: [{
+          type: 1,
+          head: true,
+          lable: '数据',
+          day: '日新增',
+          month: '月累计',
+          monthRate: '达成率',
+          year: '年累计',
+          yearRate: '达成率',
+          more: 0,
+          link: ''
+        }, {
+          type: 1,
+          lable: '线索',
+          day: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 1,
+          link: '/saleLargeArea'
+        },
+        {
+          type: 1,
+          lable: '线索',
+          day: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 1,
+          link: '/saleLargeArea'
+        },
+        {
+          type: 1,
+          lable: '线索',
+          day: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 1,
+          link: '/saleLargeArea'
+        },
+        {
+          type: 1,
+          lable: '线索',
+          day: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 1,
+          link: '/saleLargeArea'
+        }],
+      option: {
+        color: PublicSetEChartVar.setColors, //每组数据的颜色
+        tooltip: PublicSetEChartVar.setTooltip, //提示框
+        textStyle: PublicSetEChartVar.setTextStyle,
+        xAxis: {
+          splitLine: PublicSetEChartVar.setSplitLine, //垂直参考线
+          axisTick: PublicSetEChartVar.setAxisTick,
+          axisLine: PublicSetEChartVar.setAxisLineX,
+          data: [" 华南区", "华东区", "华中区", "华北区", "西南区"],
+        },
+        yAxis: [{
+            type: 'value',
+            splitLine: PublicSetEChartVar.setSplitLine,
+            axisTick: PublicSetEChartVar.setAxisTick,
+            name: '线索数',
+            min: 0,
+            max: 50,
+            position: 'left',
+            interval: 10,
+            axisLine: {
+              lineStyle: {
+                color: 'transparent'
+              }
+            },
+            axisLabel: {
+              formatter: '{value} '
+            }
+          },
+          {
+            type: 'value',
+            splitLine: PublicSetEChartVar.setSplitLine,
+            axisTick: PublicSetEChartVar.setAxisTick,
+            name: '达成率',
+            min: 0,
+            max: 200,
+            interval: 100,
+            position: 'right',
+            axisLine: PublicSetEChartVar.setAxisLineY,
+            axisLabel: {
+              formatter: '{value}'
+            }
+          }
+        ],
+        legend: {
+          data: ['日新增', '达成率', '同比', '环比']
+        },
+        series: [{
+            name: '日新增',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20],
+            itemStyle: PublicSetEChartVar.setBarColors,
+            barMaxWidth: 20,
+          },
+          {
+            name: '达成率',
+            type: 'line',
+            yAxisIndex: 1,
+            itemStyle: PublicSetEChartVar.setLineColors[0],
+            data: [105, 100, 169, 109, 129, 190]
+          },
+          {
+            name: '同比',
+            type: 'line',
+            yAxisIndex: 1,
+            itemStyle: PublicSetEChartVar.setLineColors[1],
+            data: [11.21, 10.34, 16.87, 17.04, 12.86, 13.94]
+          },
+          {
+            name: '环比',
+            type: 'line',
+            yAxisIndex: 1,
+            itemStyle: PublicSetEChartVar.setLineColors[1],
+            data: [12.21, 11.34, 13.87, 12.04, 14.86, 15.94]
+          }
+        ],
+        dataZoom: PublicSetEChartVar.setDataZoom,
+      }
+    }
+  },
+  components: {
+    Echart,
+    MyTable,
+    SelectDate,
+    MyBrandSelect,
+    MyCarSelect
+  },
+  methods:{
+    showDateSelect(){
+      // this.isShow=!this.isShow
+      //改变显示状态，其他值保持不变
+      let dateSelect={
+          updateTimeSelect:this.dateSelect.updateTimeSelect,
+          showDateSelect:true,
+          startTime:'',
+          endTime:''
+      }
+      this.$store.commit('dateSelect',dateSelect)
+    }
+  },
+  computed:{
+    ...mapState({
+      showMyBrandSelect:state=>state.showMyBrandSelect,
+      showMyCarSelect: state=>state.showMyCarSelect,
+      dateSelect:state=>state.dateSelect,
+    })
+  }
+}
+
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+@import '../styles/var';
+.change-tab {
+  background-color: @while;
+  text-align: center;
+  height: 44px;
+  line-height: 44px;
+  width: 100%;
+  border-bottom: 1px solid @borderColor;
+  /* .fixed {
+    position: fixed;
+    width: 100%;*/
+  .tab {
+    margin: 0 35px;
+    span {
+      display: inline-block;
+      height: 100%;
+      &.active {
+        border-bottom: 2px solid @themeColor;
+        color: @themeColor;
+      }
+    }
+    /*}*/
+  }
+}
+
+.select {
+  margin: 15px;
+  span {
+    border: 1px solid @borderColor;
+    display: inline-block;
+    line-height: 35px;
+    text-indent: 10px;
+    border-radius: 44px;
+    .icon-sanjiaoxing {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    +span {
+      margin-left: 10px;
+    }
+  }
+}
+
+</style>

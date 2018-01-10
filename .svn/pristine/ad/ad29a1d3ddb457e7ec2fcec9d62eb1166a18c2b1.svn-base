@@ -1,0 +1,106 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+/**
+ * [state description]
+ * @type {Object}
+ */
+const state = {
+  updateTime:'',
+  showMySlideLeft:false,
+  dateSelect:{
+    updateTimeSelect:'日新增',
+    showDateSelect:false,
+    startTime:'',
+    endTime:''
+  },
+  
+  showMyBrandSelect:false,
+  showMyCarSelect:false,
+  headerTitle:'业绩战报',
+  isLoading: false,
+  direction: 'forward',
+  toast: {
+    showToast: false,
+    title: ''
+  },
+  alert: {
+    showAlert: false,
+    isConfirm: false,
+    title: '',
+    fn: ''
+  },
+  noneObject: {
+    show: false,
+    text: ''
+  },
+  position: { //用户地理位置
+    lat: 23.129163,
+    lng: 113.264435,
+    country: '',
+    province: '',
+    city: ''
+  },
+}
+/**
+ * [mutations description]
+ * @type {Object}
+ */
+const mutations = {
+  updateLoading(state, payload) {
+    state.isLoading = payload.isLoading
+  },
+  updateDirection(state, payload) {
+    state.direction = payload.direction
+  },
+  updateToast(state, payload) {
+    state.toast.showToast = payload.showToast
+    state.toast.title = payload.title
+  },
+  updateAlert(state, payload) {
+    state.alert.showAlert = payload.showAlert
+    state.alert.isConfirm = payload.isConfirm
+    state.alert.title = payload.title
+    state.alert.fn = payload.fn
+  },
+  showMyBrandSelect(state, payload) {
+    state.showMyBrandSelect = payload
+  },
+  showMyCarSelect(state,payload){
+    state.showMyCarSelect= payload
+  },
+  dateSelect(state,payload){//改变值
+    state.dateSelect.updateTimeSelect= payload.updateTimeSelect
+    state.dateSelect.showDateSelect= payload.showDateSelect
+    state.dateSelect.startTime= payload.startTime
+    state.dateSelect.endTime= payload.endTime
+  },
+  showMySlideLeft (state,payload){
+    state.showMySlideLeft= payload
+  },
+  updateTime (state,payload){
+    state.updateTime= payload
+  },
+}
+/**
+ * [actions description]
+ * @type {Object}
+ */ //this.$store.commit('updateDlrCode', dlrCode);
+const actions = {
+  // updateDemoPosition({
+  //   commit
+  // }, top) {
+  //   commit({
+  //     type: 'updateDemoPosition',
+  //     top: top
+  //   })
+  // },
+}
+
+export default new Vuex.Store({
+  state,
+  mutations,
+  actions,
+})

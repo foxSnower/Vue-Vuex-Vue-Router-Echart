@@ -1,0 +1,134 @@
+<template>
+  <div>
+    <MyTable :data="apiData"></MyTable>
+  </div>
+</template>
+
+<script>
+import api from '@/api/api.js'
+import PublicMethods from '@/utils/PublicMethods'
+import MyTable from '@/components/MyTable'
+export default {
+  name: 'indexSale',
+  data() {
+    return {
+      apiData:[{
+          trType: 1,
+          head: true,
+          busName: '数据',
+          dayAdd: '日新增',
+          monthAdd: '月累计',
+          monthRate: '达成率',
+          yearAdd: '年累计',
+          yearRate: '达成率',
+          more: 0
+        }],
+      data: [{
+          type: 1,
+          head: true,
+          busName: '数据',
+          dayAdd: '日新增',
+          monthAdd: '月累计',
+          monthRate: '达成率',
+          year: '年累计',
+          yearRate: '达成率',
+          more: 0,
+          link:''
+        }, {
+          type: 1,
+          busName: '线索',
+          dayAdd: '30',
+          monthAdd: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 1,
+          link:'/publicPage'
+        },
+        {
+          type: 1,
+          busName: '线索',
+          dayAdd: '40',
+          monthAdd: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 0,
+        },
+        {
+          type: 1,
+          busName: '新增意向',
+          dayAdd: '30',
+          monthAdd: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 0,
+        },
+        {
+          type: 1,
+          busName: '线索',
+          dayAdd: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 0,
+        },
+        {
+          type: 1,
+          busName: '线索',
+          dayAdd: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 0,
+        },
+        {
+          type: 1,
+          busName: '线索',
+          dayAdd: '30',
+          month: '900',
+          monthRate: '15.3',
+          year: '987008',
+          yearRate: '2',
+          more: 0,
+        }
+      ]
+    }
+  },
+  components: {
+    MyTable,
+  },
+  mounted(){
+    this.$nextTick(()=>{
+      this.loadPage();
+    })
+  },
+  methods:{
+    loadPage(){
+      api.GET_SAlE_DATA({
+        orgType: '1',
+        orgId:'F01'
+      }).then(res => {
+        console.log(res.data);
+        if(res.status==0){
+          res.data.forEach((x,index)=>{
+            x.trType =1;//自定义行类型：1 是4列 2 是2列
+
+            this.apiData.push(x);
+          })
+        }else{
+           console.log(res.message);
+        }
+      })
+    }
+  }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+
+</style>

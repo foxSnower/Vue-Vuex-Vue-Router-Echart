@@ -1,0 +1,47 @@
+{
+  "GET_TEST":
+  {
+    "callTime": "2017-11-02 11:14:27",
+    "error": "R200",
+    "errormessage": "调用成功",
+    "result":
+    {
+      "keyWords": [
+      {
+        "keyWord": "技术好",
+        "optionId": "100018"
+      },
+      {
+        "keyWord": "质量好",
+        "optionId": "100020"
+      },
+      {
+        "keyWord": "速度块",
+        "optionId": "100022"
+      }],
+      "titleName": "服务评价",
+      "commTemplateId": 100006
+    },
+    "token": ""
+  },
+  "GET_SAlE_DATA":
+  {
+    "params":
+    {
+      "orgType": "1",
+      "orgId": "F01"
+    },
+    "status": 0,
+    "message": "登录成功",
+    "data": [
+    {
+      "monthRate": "30",
+      "yearRate": "20",
+      "dayAdd": "40",
+      "monthAdd": "5667",
+      "yearAdd": "89856463",
+      "busType": "1",
+      "busName": "线索"
+    }]
+  }
+}

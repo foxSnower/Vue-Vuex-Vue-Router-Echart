@@ -1,0 +1,68 @@
+<template>
+	<transition name="fade">
+		<div class="loading" v-if="isLoading">
+			<i class="iconfont icon-loading"></i>
+		</div>
+	</transition>
+</template>
+
+<script>
+import { mapState, mapActions } from 'vuex'
+	export default{
+		name:'Loading',
+		watch:{
+			isLoading(val){
+				if(val){
+					setTimeout(()=>{
+						this.updateLoading(false);
+					},10000)
+				}
+			}
+		},
+		methods:{
+			...mapActions(['updateLoading'])
+		},
+		computed:{
+			...mapState({
+				isLoading:state=>state.isLoading
+			})
+		}
+	}
+</script>
+
+<style lang="less" scoped="scoped">
+ @import '../styles/var';
+
+	.loading {
+		position: fixed;
+		width: 7rem;
+		height: 7rem;
+		left: 50%;
+		top: 50%;
+		margin-left: -3.5rem;
+		margin-top: -3.5rem;
+		text-align: center;
+		color: @themeColor;
+		line-height: 7rem;
+		border-radius: 5px;
+		font-size: 1.4rem;
+		animation: myLoading 1s steps(12,end)  infinite;
+		z-index:99999;
+		.iconfont {
+			font-size: 7rem;
+		}
+	}
+	
+	@keyframes myLoading {
+		0% {
+			transform: rotate3d(0,0,1,0deg);
+		}
+		100% {
+			transform: rotate3d(0,0,1,360deg);
+		}
+	}
+	.icon-loading:before {
+    content: "\E63A";
+    font-family: "iconfont" !important;
+}
+</style>

@@ -1,0 +1,139 @@
+<template>
+  <div class="tab">
+    <div class="fixed">
+      <div class="f-flex">
+        <div class="f-item" :class="{active:active==1}" @click="linkTo(1)">
+          <i class="iconfont icon-xiaoshou"></i><span>销售</span>
+        </div>
+        <div class="f-item" :class="{active:active==2}" @click="linkTo(2)">
+          <i class="iconfont icon-kucun"></i><span>库存</span>
+        </div>
+        <div class="f-item" :class="{active:active==3}" @click="linkTo(3)">
+          <i class="iconfont icon-baozhang"></i><span>售后</span>
+        </div>
+        <div class="f-item" :class="{active:active==4}" @click="linkTo(4)">
+          <i class="iconfont icon-shouhou"></i><span>保险</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  name: "BottomTab",
+  data(){
+  	return{
+  		active:1
+  	}
+  },
+  props: {
+    headerTransition: {
+      type: String,
+      default: 'header-fade-in-right'
+    },
+    title: String
+  },
+  computed: {
+    _leftOptions() {
+      return {
+        preventGoBack: false
+      }
+    }
+  },
+  methods: {
+    linkTo(index){
+    	this.active= index;
+      switch(index){
+      	case 1:
+      	this.$router.push('/indexSale');
+      	break;
+      	case 2:
+      	this.$router.push('/indexStock');
+      	break;
+      	case 3:
+      	this.$router.push('/indexService');
+      	break;
+      	case 4:
+      	this.$router.push('/indexInsurance');
+      	break;
+      	default:
+      	break;
+      }
+    }
+  }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var.less';
+.tab {
+  height: @normalHeight;
+  text-align: center;
+  .f-flex {
+    align-items: inherit;
+    height: 100%;
+    span {
+      display: block;
+      font-size: @tinySize;
+      color: @lighterColor;
+      position: relative;
+      top: -40px;
+    }
+    .iconfont {
+      font-size: 2.4rem;
+      color: @lightColor;
+      position: relative;
+      top: -8px;
+    }
+    .active .iconfont,
+    .active span {
+      color: @tabActiveColor;
+    }
+  }
+}
+
+.fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: @normalHeight;
+  line-height: @normalHeight;
+  background-color: @while;
+  z-index: 99;
+  &:after {
+    .setTopLine();
+  }
+}
+
+.header-fade-in-right-enter-active {
+  animation: fadeinR .5s;
+}
+
+.header-fade-in-left-enter-active {
+  animation: fadeinL .5s;
+}
+
+@keyframes fadeinR {
+  0% {
+    opacity: 0;
+    transform: translateX(150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeinL {
+  0% {
+    opacity: 0;
+    transform: translateX(-150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+</style>

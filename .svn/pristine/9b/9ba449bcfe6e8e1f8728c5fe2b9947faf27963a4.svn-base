@@ -1,0 +1,65 @@
+<template>
+  <transition name="toastTransition">
+    <div class="toast" v-if="toast.showToast">
+      {{toast.title}}
+    </div>
+  </transition>
+</template>
+<script>
+import { mapState, mapActions } from 'vuex'
+export default {
+  name: 'Toast',
+  methods: {
+    ...mapActions(['updateToast']),
+  },
+  watch: {
+    toast(val){
+      showToast:{
+        if (val.showToast) {
+          setTimeout(() => {
+            this.updateToast({ showToast: false })
+          }, 1000)
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      toast: state => state.toast
+    })
+  }
+}
+
+</script>
+<style scoped="scoped">
+.toast {
+  position: fixed;
+  width: 80%;
+  height: 40px;
+  left: 50%;
+  top: 50%;
+  margin-left: -40%;
+  margin-top: -20px;
+  text-align: center;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  line-height: 40px;
+  border-radius: 5px;
+  font-size: 1.4rem;
+}
+
+.toastTransition-enter-active,
+.toastTransition-leave-active {
+  transition: all .5s;
+}
+/*进入时的定位*/
+.toastTransition-enter {
+  transform: scaleY(-1);
+}
+/*消失时位置的变化*/
+.toastTransition-leave-to {
+  transform: scale(.7);
+  opacity: 0;
+}
+
+</style>

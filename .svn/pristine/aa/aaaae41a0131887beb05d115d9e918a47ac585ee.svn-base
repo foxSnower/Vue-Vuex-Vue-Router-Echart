@@ -1,0 +1,38 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import personnalCenter from '@/pages/personnalCenter'
+import login from '@/pages/login'
+import index from '@/pages/index'
+import indexSale from '@/pages/indexSale' //销售
+import indexStock from '@/pages/indexStock' //库存
+import indexService from '@/pages/indexService' //售后
+import indexInsurance from '@/pages/indexInsurance' //保险
+import publicPage from '@/pages/publicPage' //大区
+import saleArea from '@/pages/saleArea' //大区
+// import saleLittleArea from '@/pages/saleLittleArea' //大区
+// import saleTinyArea from '@/pages/saleTinyArea'
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+    { path: '/',name: '登录',meta: { title: '' },component: login},
+    { path: '/index',name: '经销商集团',meta: { title: '' },component: index,
+      children: [
+        { path: '/indexSale',name:'销售战报', meta: { title: '' },component: indexSale},
+        { path: '/indexStock', name:'库存战报',meta: { title: '经销商集团' },component: indexStock},
+        { path: '/indexService',name:'售后战报',meta: { title: '经销商集团' },component: indexService},
+        { path: '/indexInsurance',name:'保险战报',meta: { title: '经销商集团' },component: indexInsurance}
+      ]},
+    { path: '/publicPage',name: '公共页面',meta: { title: '经销商集团'},component: publicPage},
+    { path: '/saleArea',name: '',meta: { title: '经销商集团'},component: saleArea},
+    // { path: '/saleLittleArea',name: '',meta: { title: '经销商集团'},component: saleLittleArea},
+    // { path: '/saleTinyArea',name: '',meta: { title: '经销商集团'},component: saleTinyArea},
+    {
+      path: '/personnalCenter',
+      name: 'personnalCenter',
+      title: '个人中心',
+      component: personnalCenter
+    },
+  ]
+})

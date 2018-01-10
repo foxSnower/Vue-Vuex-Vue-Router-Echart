@@ -1,0 +1,111 @@
+<template>
+  <div class="hello">
+    <div class="change-tab">
+      <div class="fixed">
+        <span>按组织</span><span>按品牌</span><span>按车系</span><span>按日期</span>
+      </div>
+    </div>
+    <Echart :options="options"></Echart>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>大区</th>
+          <th>日新增</th>
+          <th>月累计</th>
+          <th>年累计</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>大区1</td>
+          <td>411027</td>
+          <td>411027</td>
+          <td>411027</td>
+        </tr>
+        <tr>
+          <td>大区2</td>
+          <td>560001</td>
+          <td>400003</td>
+          <td>560001</td>
+        </tr>
+        <tr>
+          <td>大区3</td>
+          <td>411027</td>
+          <td>411027</td>
+          <td>560001</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+<script>
+import Echart from '@/components/Echart'
+export default {
+  name: 'HelloWorld',
+  data() {
+    return {
+      options: {
+        title: { text: 'ECharts 入门示例' },
+        tooltip: {},
+        xAxis: {
+          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+        },
+        yAxis: {},
+        series: [{
+          name: '销量',
+          type: 'bar',
+          data: [5, 20, 36, 10, 10, 20]
+        }]
+      }
+    }
+  },
+  components: {
+    Echart
+  }
+}
+
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+@import '../styles/var';
+.change-tab {
+  text-align: center;
+  height: 44px;
+  width: 100%;
+  .fixed {
+    background-color: @while;
+    position: fixed;
+    padding: 10px 0;
+    width: 100%;
+  }
+  span {
+    padding: 5px 15px;
+    background-color: green;
+    color: #fff;
+    border-right: 1px solid #fff;
+  }
+  span:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+  }
+  span:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-right: 0;
+  }
+}
+
+
+.table {
+  background-color: @while;
+  width: 100%;
+  text-align: center;
+  border: 1px solid @borderColor;
+  td:first-child,
+  th:first-child {
+    text-align: left;
+    border-left: 0;
+  }
+}
+
+</style>

@@ -1,0 +1,134 @@
+<template>
+  <div class="select" v-show="selected">
+    <div class="select-header">
+      <div class="left" @click.preventDefault @click="onClickCancel" >取消</div>
+      <div class="center">
+
+          <span>选择查看{{title}}({{selectedLength}}/{{list.length}})</span>
+
+      </div>
+      <div class="right">确定</div>
+    </div>
+    <div class="select-content">
+      <div class="car-series">
+        <ul class="items" v-for="(item,index) in list" :data-index="index" @click="setListCheck(index)" :class="{active: item.check==true}">{{ item.check }}
+          <!--<li v-for="(item2,index1) in item.myDatas">{{item2}}</li>-->
+        </ul>
+      </div>
+      <div class="car-box">
+        <ul v-for="(item,index) in list">
+          <li class="cars" v-for="(item2,index1) in item.myDatas">{{item2}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    name:'select',
+    data(){
+      return{
+        itemSelected:{},
+        list: [
+          {check: false, label: '1', myDatas:[1,2,3,4,6,6]},
+          {check: false, label: '2', myDatas:[1,2,3,4,6,6]},
+          {check: false, label: '3', myDatas:[1,2,3,4,6,6]},
+          {check: false, label: '4', myDatas:[1,2,3,4,6,6]}
+        ],
+        selected:true,
+        selectedLength:0,
+      }
+    },
+
+    props:{
+      headerTransition: {
+        type: String,
+        default: 'header-fade-in-right'
+      },
+      title: String
+    },
+    computed:{},
+    methods:{
+
+      onClickCancel(){
+        this.selected=false;
+      },
+      setListCheck: function(idx) {
+        const check = this.list[idx].check;
+        this.list[idx].check = check === true ? false : true;
+        let length= 0 ;
+        this.list.forEach((y,index)=>{
+          if(y.check==true){
+            length++;
+          }
+        });
+        this.selectedLength=length;
+      }
+    }
+  }
+</script>
+<style lang="less" scoped="scoped">
+  @import '../styles/var.less';
+  .select{
+    position:fixed;
+    bottom:0;
+    height:300px;
+    width: 100%;
+    .select-header{
+      height:@normalHeight;
+      line-height:@normalHeight;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+      font-size:1.8rem;
+      color: @themeColor;
+      background-color: #fff;
+      text-align: center;
+      .left{
+        position:absolute;
+        width: 70px;
+        top:0;
+        left: 0;
+      }
+      .center{
+        color: #000;
+      }
+      .right{
+        position: absolute;
+        right:0;
+        top: 0;
+        width: 70px;
+      }
+    }
+    .select-content{
+      height: 257px;
+      background-color: #fff;
+      border-bottom: 1px solid #ccc;
+      overflow: auto;
+      .car-series{
+        display:inline-block;
+        .items{
+          border:none;
+          width: 120px;
+          height: 33px;
+          line-height: 33px;
+          text-align: center;
+          background-color: #ccc;
+        }
+      }
+
+      .car-box{
+        display: inline-block;
+        ul{
+          .cars{
+            float: left;
+            list-style: none;
+          }
+        }
+      }
+
+    }
+  }
+  .active{
+    background-color: #ccc;
+  }
+</style>

@@ -1,0 +1,90 @@
+<template>
+  <div id="watchWay" v-if="dateSelect.showDateSelect">
+      <div class="selectWay" >
+          <div class="showway" id="change">切换查看方法</div>
+          <div class="showway" @click="selectType('日新增')">日新增</div>
+          <div class="showway" @click="selectType('月累计')">月累计</div>
+          <div class="showway" @click="selectType('年累计')">年累计</div>
+          <div class="showway" @click="setDate">其他时间段</div>
+          <div class="showway canselbutton" @click="cancel">取消</div>
+      </div>
+  </div>
+</template>
+<script>
+import Vue from 'vue'
+import Calendar from "./PickerTime/modules/index"
+Vue.use(Calendar);
+
+import {mapState} from 'vuex'
+export default {
+  name: 'selectTime ',
+  methods:{
+       setDateSelect(updateTimeSelect,showDateSelect,startTime,endTime){
+            let dateSelect={
+                    updateTimeSelect:updateTimeSelect,
+                    showDateSelect:showDateSelect,
+                    startTime:startTime,
+                    endTime:endTime
+                };     
+            this.$store.commit('dateSelect',dateSelect)
+       },
+        setDate(){
+            let _this= this;//改变全局变量中this的指向
+            this.$calendar.show({
+                year:[1990,2050],  //年份的范围,如果初始化的年份不在这个范围，会自动选最小的年份
+                // endTime:'2020-2-12',  //终止的日期，这个要在year的范围里面，不然没用
+                // date:'2017-12-01',  //初始化的日期
+                date1:"",
+                date2:"",
+                onNext(startTime){
+                    _this.setDateSelect(_this.dateSelect.updateTimeSelect,_this.dateSelect.showDateSelect,startTime,_this.dateSelect.endTime);
+                    _this.selectType(_this.dateSelect.startTime +'-'+_this.dateSelect.endTime)
+                   
+                },
+                onOk(endTime){
+                      _this.setDateSelect(_this.dateSelect.updateTimeSelect,_this.dateSelect.showDateSelect,_this.dateSelect.startTime,endTime);
+                       _this.selectType(_this.dateSelect.startTime +'-'+_this.dateSelect.endTime)
+                },
+            });  
+        },
+        cancel(){
+            this.setDateSelect(this.dateSelect.updateTimeSelect,false,this.dateSelect.startTime,this.dateSelect.endTime);
+
+        },
+        selectType(type){
+             this.setDateSelect(type,false,this.dateSelect.startTime,this.dateSelect.endTime);
+        }
+    },
+    computed:{
+        ...mapState({
+            dateSelect:state=>state.dateSelect
+        })
+    }
+}
+
+</script>
+<style lang="less">
+#watchWay{
+    width:100%;
+    height: 260px;
+    line-height: 40px;
+    position: fixed;
+    left:0;
+    bottom:0;
+    z-index:1000;
+    background-color:white;
+    text-align: center;
+    .selectWay{
+        .showway{
+        border-top: 1px solid #CCCCCC;
+        }
+        #change{
+            color: #999999;
+        }
+        #canselbutton{
+            border-top:15px solid #CCCCCC;
+        }
+    }
+}
+
+</style>

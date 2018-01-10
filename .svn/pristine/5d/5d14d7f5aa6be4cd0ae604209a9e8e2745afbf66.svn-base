@@ -1,0 +1,65 @@
+<template>
+  <div id="app">
+    <!-- <img src="./assets/img/logo.png"> -->
+    <!-- <router-link to="/personnalCenter">Go to Foo</router-link> -->
+    <MyHeader :title="title" v-if="title!='登录'"></MyHeader>
+    <router-view/>
+    <Loading :isLoading="isLoading"></Loading>
+    <Toast :toast="toast"></Toast>
+  </div>
+</template>
+<script>
+import MyHeader from '@/components/MyHeader'
+import Loading from '@/components/Loading'
+import Toast from '@/components/Toast'
+import { mapState } from 'vuex'
+export default {
+  name: 'app',
+  data(){
+    return{
+      title:'业绩战报'
+    }
+  },
+  components:{
+    MyHeader,
+    Loading,
+    Toast
+  },
+  watch: {
+    '$route': (to, from) => {
+      // 对路由变化作出响应...
+      this.title = to.meta.title
+      document.title = to.meta.title
+    }
+  },
+  mounted(){
+    this.$nextTick(()=>{
+      this.title = this.$route.meta.title
+    })
+  },
+  computed:{
+    ...mapState({
+      isLoading: state => state.isLoading,
+      toast: state => state.toast,
+    }),
+  }
+}
+
+</script>
+<style lang="less">
+
+@import './styles/index';
+@import './styles/var';
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif,@FontDefault;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1.6rem;
+  background-color: @bodyColor;
+  /*text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;*/
+}
+
+</style>

@@ -1,0 +1,172 @@
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+/**
+ * [state 全局变量的初始值]
+ * @type {Object}
+ */
+const state = {
+  toast: { showToast: false, title: '' },
+  isLoading: false,
+  refreshTime: '',
+  direction: 'forward',
+
+  activeTab: 1,
+
+  showMySlideLeft: false,
+  showDateSelect: false,
+  showMyBrandSelect: false,
+  showMyCarSelect: false,
+
+  dateSelect: {
+    checkWayName: '月累计',
+    // checkWay:'1',//1、日新增2、月累计3、年累计4、其他时间段
+    startTime: '',
+    endTime: ''
+  },
+  myBrandSelect: {
+    values: []
+  },
+  myCarSelect: {
+    show: false,
+    values: []
+  },
+  noneObject: {
+    show: false,
+    text: ''
+  },
+  //数据存贮
+  GET_SAlE_DATA: null, //销售
+  GET_STOCK_DATA: null, //库存
+  GET_SERVICE_DATA: null, //售后
+  GET_INSURANCE_DATA: null, //保险
+
+  SALE_XIANSUO_AREA: null, //线索区
+  SALE_LAIDIAN_AREA: null, //来店区
+  SALE_YIXIANG_AREA: null, //意向区
+  SALE_DINGDAN_AREA: null, //订单区
+  SALE_KAIPIAO_AREA: null, //开票区
+  SALE_JIAOCHE_AREA: null, //交车区
+  SALE_TICHE_AREA: null, //提车区
+  SALE_TICHEJIN_AREA: null, //提车金额区
+  SALE_DINGDANJIN_AREA: null, //订单金额区
+  SALE_KAIPIAOJIN_AREA: null, //开票金额区
+
+  SALE_XIANSUO_AREA_BRAND: null, //品牌——线索区
+  SALE_LAIDIAN_AREA_BRAND: null, //品牌——来店区
+  SALE_YIXIANG_AREA_BRAND: null, //品牌——意向区
+  SALE_DINGDAN_AREA_BRAND: null, //品牌——订单区
+  SALE_KAIPIAO_AREA_BRAND: null, //品牌——开票区
+  SALE_JIAOCHE_AREA_BRAND: null, //品牌——交车区
+  SALE_TICHE_AREA_BRAND: null, //品牌——提车区
+  SALE_TICHEJIN_AREA_BRAND: null, //品牌——提车金额区
+  SALE_DINGDANJIN_AREA_BRAND: null, //品牌——订单金额区
+  SALE_KAIPIAOJIN_AREA_BRAND: null, //品牌——开票金额区
+
+  SALE_XIANSUO_AREA_CAR: null, //车系——线索区
+  SALE_LAIDIAN_AREA_CAR: null, //车系——来店区
+  SALE_YIXIANG_AREA_CAR: null, //车系——意向区
+  SALE_DINGDAN_AREA_CAR: null, //车系——订单区
+  SALE_KAIPIAO_AREA_CAR: null, //车系——开票区
+  SALE_JIAOCHE_AREA_CAR: null, //车系——交车区
+  SALE_TICHE_AREA_CAR: null, //车系——提车区
+  SALE_TICHEJIN_AREA_CAR: null, //车系——提车金额区
+  SALE_DINGDANJIN_AREA_CAR: null, //车系——订单金额区
+  SALE_KAIPIAOJIN_AREA_CAR: null, //车系——开票金额区
+
+}
+/**
+ * [mutations 这里写的是全局变量发生变化后取代原来的值]
+ * @type {Object}
+ */
+const mutations = {
+  updateToast(state, payload) { state.toast = payload.toast },
+  updateLoading(state, payload) { state.isLoading = payload.isLoading },
+  updateRefreshTime(state, payload) { state.refreshTime = payload.refreshTime },
+
+  updateDirection(state, payload) {
+    state.direction = payload.direction
+  },
+
+  updateActiveTab(state, payload) { state.activeTab = payload.activeTab },
+  updateShowMySlideLeft(state, payload) { state.showMySlideLeft = payload.showMySlideLeft },
+  updateShowDateSelect(state, payload) { state.showDateSelect = payload.showDateSelect },
+  updateShowMyBrandSelect(state, payload) { state.showMyBrandSelect = payload.showMyBrandSelect },
+  updateShowMyCarSelect(state, payload) { state.showMyCarSelect = payload.showMyCarSelect },
+
+  updateDateSelect(state, payload) { state.dateSelect = payload.dateSelect },
+  updateMyBrandSelect(state, payload) { state.myBrandSelect = payload.myBrandSelect },
+  updateMyCarSelect(state, payload) { state.myCarSelect = payload.myCarSelect },
+
+  GET_SAlE_DATA(state, payload) { state.GET_SAlE_DATA = payload },
+  GET_STOCK_DATA(state, payload) { state.GET_STOCK_DATA = payload },
+  GET_SERVICE_DATA(state, payload) { state.GET_SERVICE_DATA = payload },
+  GET_INSURANCE_DATA(state, payload) { state.GET_INSURANCE_DATA = payload },
+
+  SALE_XIANSUO_AREA(state, payload) { state.SALE_XIANSUO_AREA = payload },
+  SALE_LAIDIAN_AREA(state, payload) { state.SALE_LAIDIAN_AREA = payload },
+  SALE_YIXIANG_AREA(state, payload) { state.SALE_YIXIANG_AREA = payload },
+  SALE_DINGDAN_AREA(state, payload) { state.SALE_DINGDAN_AREA = payload },
+  SALE_KAIPIAO_AREA(state, payload) { state.SALE_KAIPIAO_AREA = payload },
+  SALE_JIAOCHE_AREA(state, payload) { state.SALE_JIAOCHE_AREA = payload },
+  SALE_TICHE_AREA(state, payload) { state.SALE_TICHE_AREA = payload },
+  SALE_TICHEJIN_AREA(state, payload) { state.SALE_TICHEJIN_AREA = payload },
+  SALE_DINGDANJIN_AREA(state, payload) { state.SALE_DINGDANJIN_AREA = payload },
+  SALE_KAIPIAOJIN_AREA(state, payload) { state.SALE_KAIPIAOJIN_AREA = payload },
+
+  SALE_XIANSUO_AREA_BRAND(state, payload) { state.SALE_XIANSUO_AREA_BRAND = payload },
+  SALE_LAIDIAN_AREA_BRAND(state, payload) { state.SALE_LAIDIAN_AREA_BRAND = payload },
+  SALE_YIXIANG_AREA_BRAND(state, payload) { state.SALE_YIXIANG_AREA_BRAND = payload },
+  SALE_DINGDAN_AREA_BRAND(state, payload) { state.SALE_DINGDAN_AREA_BRAND = payload },
+  SALE_KAIPIAO_AREA_BRAND(state, payload) { state.SALE_KAIPIAO_AREA_BRAND = payload },
+  SALE_JIAOCHE_AREA_BRAND(state, payload) { state.SALE_JIAOCHE_AREA_BRAND = payload },
+  SALE_TICHE_AREA_BRAND(state, payload) { state.SALE_TICHE_AREA_BRAND = payload },
+  SALE_TICHEJIN_AREA_BRAND(state, payload) { state.SALE_TICHEJIN_AREA_BRAND = payload },
+  SALE_DINGDANJIN_AREA_BRAND(state, payload) { state.SALE_DINGDANJIN_AREA_BRAND = payload },
+  SALE_KAIPIAOJIN_AREA_BRAND(state, payload) { state.SALE_KAIPIAOJIN_AREA_BRAND = payload },
+
+  SALE_XIANSUO_AREA_CAR(state, payload) { state.SALE_XIANSUO_AREA_CAR = payload },
+  SALE_LAIDIAN_AREA_CAR(state, payload) { state.SALE_LAIDIAN_AREA_CAR = payload },
+  SALE_YIXIANG_AREA_CAR(state, payload) { state.SALE_YIXIANG_AREA_CAR = payload },
+  SALE_DINGDAN_AREA_CAR(state, payload) { state.SALE_DINGDAN_AREA_CAR = payload },
+  SALE_KAIPIAO_AREA_CAR(state, payload) { state.SALE_KAIPIAO_AREA_CAR = payload },
+  SALE_JIAOCHE_AREA_CAR(state, payload) { state.SALE_JIAOCHE_AREA_CAR = payload },
+  SALE_TICHE_AREA_CAR(state, payload) { state.SALE_TICHE_AREA_CAR = payload },
+  SALE_TICHEJIN_AREA_CAR(state, payload) { state.SALE_TICHEJIN_AREA_CAR = payload },
+  SALE_DINGDANJIN_AREA_CAR(state, payload) { state.SALE_DINGDANJIN_AREA_CAR = payload },
+  SALE_KAIPIAOJIN_AREA_CAR(state, payload) { state.SALE_KAIPIAOJIN_AREA_CAR = payload },
+}
+/**
+ * [actions 取代原来的值的方法]
+ * @type {Object}
+ */
+const actions = {
+  updateToast({ commit }, toast) { commit({ type: 'updateToast', toast: toast }) },
+  updateLoading({ commit }, isLoading) { commit({ type: 'updateLoading', isLoading: isLoading }) },
+  updateRefreshTime({ commit }, refreshTime) { commit({ type: 'updateRefreshTime', refreshTime: refreshTime }) },
+
+  updateActiveTab({ commit }, activeTab) { commit({ type: 'updateActiveTab', activeTab: activeTab }) },
+
+  updateShowMySlideLeft({ commit }, showMySlideLeft) { commit({ type: 'updateShowMySlideLeft', showMySlideLeft: showMySlideLeft }) },
+  updateShowDateSelect({ commit }, showDateSelect) { commit({ type: 'updateShowDateSelect', showDateSelect: showDateSelect }) },
+  updateShowMyBrandSelect({ commit }, showMyBrandSelect) { commit({ type: 'updateShowMyBrandSelect', showMyBrandSelect: showMyBrandSelect }) },
+  updateShowMyCarSelect({ commit }, showMyCarSelect) { commit({ type: 'updateShowMyCarSelect', showMyCarSelect: showMyCarSelect }) },
+
+  updateDateSelect({ commit }, dateSelect) { commit({ type: 'updateDateSelect', dateSelect: dateSelect }) },
+  updateMyBrandSelect({ commit }, myBrandSelect) { commit({ type: 'updateMyBrandSelect', myBrandSelect: myBrandSelect }) },
+  updateMyCarSelect({ commit }, myCarSelect) { commit({ type: 'updateMyCarSelect', myCarSelect: myCarSelect }) },
+
+
+
+}
+
+/**
+ * 声明vuex中的几个模块，保证其可以全局使用
+ */
+export default new Vuex.Store({
+  state,
+  mutations,
+  actions,
+})

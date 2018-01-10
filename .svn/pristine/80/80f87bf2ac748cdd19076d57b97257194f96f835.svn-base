@@ -1,0 +1,45 @@
+<template>
+  <div id="app">
+    <MyHeader v-show="$route.name!='登录'"></MyHeader>
+   <!--  <transition name="pop-in"> -->
+       <keep-alive><router-view/></keep-alive>
+    <!-- </transition> -->
+    <Loading :isLoading="isLoading"></Loading>
+    <Toast :toast="toast"></Toast>
+  </div>
+</template>
+<script>
+import MyHeader from '@/components/MyHeader'
+import Loading from '@/components/Loading'
+import Toast from '@/components/Toast'
+
+import { mapState } from 'vuex'
+export default {
+  name: 'app',
+  components: {
+    MyHeader,
+    Loading,
+    Toast,
+
+  },
+  computed: {
+    ...mapState({
+      isLoading: state => state.isLoading,
+      toast: state => state.toast,
+    }),
+  },
+}
+</script>
+<style lang="less">
+@import './styles/index';
+@import './styles/var';
+
+#app {
+  font-family: @FontDefault;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1.6rem;
+  background-color: @bodyColor;
+}
+
+</style>

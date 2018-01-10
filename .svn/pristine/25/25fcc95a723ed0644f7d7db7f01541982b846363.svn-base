@@ -1,0 +1,174 @@
+<template>
+  <div class="select" v-show="selected">
+    <div class="select-header">
+      <div class="left" @click.preventDefault @click="onClickCancel" >取消</div>
+      <div class="center">
+
+          <span>选择查看{{title}}({{selectedLength}}/{{innerList.myDatas.length}})</span>
+
+      </div>
+      <div class="right">确定 </div>
+    </div>
+    <div class="select-content">
+      <div class="car-series">
+        <div class="series-items" v-for="(item,index) in list" :data-index="index" @click="setListCheck(item,index)" :class="{active: index1==index}">{{ item.label }}
+        </div>
+      </div>
+      <div class="car-box">
+
+        <div class="box-items" v-for="(items,index) in innerList.myDatas"  @click="setCarsCheck(items,index)">
+          <span>{{items.check}}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    name:'select',
+    data(){
+      return{
+        index1:-1,
+        innerList:{
+          myDatas:[]
+        },
+        itemSelected:{},
+        list: [
+          {check: false, label: '1',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '3' },{check: false, label: '4' },{check: false, label: '4' }]},
+          {check: false, label: '2',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' },{check: false, label: '4' },{check: false, label: '4' }]},
+          {check: false, label: '3',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' },{check: false, label: '4' },{check: false, label: '4' },{check: false, label: '4' }]},
+          {check: false, label: '4',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' },{check: false, label: '4' },{check: false, label: '4' },{check: false, label: '4' },{check: false, label: '4' }]},
+          {check: false, label: '5',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' }]},
+          {check: false, label: '6',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' }]},
+          {check: false, label: '7',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' }]},
+          {check: false, label: '8',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' }]},
+          {check: false, label: '9',myDatas:[{check: false, label: '1' },{check: false, label: '2' },{check: false, label: '1' },{check: false, label: '1' }]}
+
+        ],
+        selected:true,
+        selectedLength:0,
+      }
+    },
+    mounted(){
+      this.loadPage();
+    },
+    props:{
+      headerTransition: {
+        type: String,
+        default: 'header-fade-in-right'
+      },
+      title: String
+    },
+    computed:{},
+    methods:{
+      loadPage(){
+        this.list.forEach((y,index)=>{
+          if(index==0){
+            this.innerList = y;
+          }
+        })
+      },
+      onClickCancel(){
+        this.$store.commit('showMyCarSelect',false)
+      },
+      setListCheck: function(item,index) {
+          this.innerList=item;
+          this.index1=index;
+      },
+      setCarsCheck:function (item,idx) {
+//        console.log(item.check);
+//        console.log(this.innerList);
+//        console.log(item.check);
+        const check= item.check;
+        item.check=check===true?false : true;
+        let length=0;
+        this.innerList.myDatas.forEach((y,index)=>{
+          if(y.check==true){
+            length++;
+          }
+        });
+        this.selectedLength=length;
+
+      }
+    }
+  }
+</script>
+<style lang="less" scoped="scoped">
+  @import '../styles/var.less';
+  .select{
+    position:fixed;
+    bottom:0;
+    height:300px;
+    width: 100%;
+    .select-header{
+      height:@normalHeight;
+      line-height:@normalHeight;
+      border-bottom: 1px solid #ccc;
+      position: relative;
+      font-size:1.8rem;
+      color: @themeColor;
+      background-color: #fff;
+      text-align: center;
+      .left{
+        position:absolute;
+        width: 70px;
+        top:0;
+        left: 0;
+      }
+      .center{
+        color: #000;
+      }
+      .right{
+        position: absolute;
+        right:0;
+        top: 0;
+        width: 70px;
+      }
+    }
+    .select-content{
+      height: 257px;
+      width: 100%;
+      background-color: #fff;
+      /*border-bottom: 1px solid #ccc;*/
+      .car-series{
+        display:inline-block;
+        width:25%;
+        float: left;
+        overflow: auto;
+        height: 100%;
+        .series-items{
+          border:none;
+          width: 100%;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          background-color: #f3f3f3;
+        }
+        .active{
+          background-color: #fff;
+        }
+      }
+      .car-box{
+        display: inline-block;
+        width:75%;
+        height: 100%;
+        overflow: auto;
+        .box-items{
+          width:33.33%;
+          text-align: center;
+          float: left;
+          span{
+            display:inline-block;
+            border: 1px solid #ccc;
+            width:80%;
+            margin-top:20px;
+            height: 33px;
+            line-height: 33px;
+          }
+        }
+      }
+    }
+  }
+
+</style>

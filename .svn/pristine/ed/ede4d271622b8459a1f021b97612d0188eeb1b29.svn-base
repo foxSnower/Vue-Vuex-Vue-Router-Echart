@@ -1,0 +1,76 @@
+<template>
+  <div id="app">
+    <MyHeader v-show="$route.name!='登录'"></MyHeader>
+    <router-view/>
+    <Loading :isLoading="isLoading"></Loading>
+    <Toast :toast="toast"></Toast>
+    <MyBrandSelect v-if="showMyBrandSelect"></MyBrandSelect>
+    <MyCarSelect></MyCarSelect>
+    <p v-if="data1==''&&data2==''" @click="setDate">请选择时间段</p>
+    <p v-if="data1!=''">{{data1}}至{{data2}}</p>
+  </div>
+</template>
+<script>
+import MyHeader from '@/components/MyHeader'
+import Loading from '@/components/Loading'
+import Toast from '@/components/Toast'
+import MyBrandSelect from '@/components/MyBrandSelect'
+import MyCarSelect from '@/components/MyCarSelect'
+import { mapState } from 'vuex'
+export default {
+  name: 'app',
+  data(){
+    return{
+      data1:'',
+      data2:''
+    }
+  },
+  components: {
+    MyHeader,
+    Loading,
+    Toast,
+    MyBrandSelect,
+    MyCarSelect
+  },
+  computed: {
+    ...mapState({
+      isLoading: state => state.isLoading,
+      toast: state => state.toast,
+      showMyBrandSelect: state => state.showMyBrandSelect,
+      showMyCarSelect: state=> state.showMyCarSelect
+    }),
+  },
+  methods:{
+   setDate(){
+     let _this= this;
+       this.$calendar.show({
+           onNext(date){
+             console.log('1111'+date );
+              _this.data1 = this.date ;
+              console.log('1111'+_this.data1 );
+           },
+           onOk(date){
+             console.log('2222'+date );
+              _this.data2 = this.date;
+           },
+       });
+    },
+}
+}
+</script>
+<style lang="less">
+@import './styles/index';
+@import './styles/var';
+
+#app {
+  font-family: @FontDefault;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1.6rem;
+  background-color: @bodyColor;
+  /*text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;*/
+}
+
+</style>

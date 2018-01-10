@@ -1,0 +1,203 @@
+ import store from '../vuex/store.js'
+
+ //登录信息
+ const loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
+ const orgType = loginInfo.data.orgType; //1 集团 2大区 3 小区 4 4s店
+ const orgId = loginInfo.data.orgId;
+ const orgCode = loginInfo.data.orgCode;
+
+
+ //比较数值，有0或''的值转化成'-'
+ const transformVal = (val) => {
+   for (var y in val) {
+     if (val[y] == 0 || val[y] == '') {
+       val[y] = '-';
+     }
+   }
+ }
+
+ //添加对应链接
+ const indexLinkTo = (x) => {
+   switch (x.busName) {
+     //销售
+     case '线索':
+       x.link = './saleArea';
+       x.pageType = 'SALE_XIANSUO_AREA';
+       break;
+     case '来店批次':
+       // x.link = './saleLaiDianArea';
+       x.link = './saleArea';
+       x.pageType = 'SALE_LAIDIAN_AREA';
+       break;
+     case '新增意向':
+       // x.link = './saleYiXiangArea';
+       x.link = './saleArea';
+       x.pageType = 'SALE_YIXIANG_AREA';
+       break;
+     case '订单':
+       x.link = './saleArea';
+       x.pageType = 'SALE_DINGDAN_AREA';
+       break;
+     case '开票':
+       x.link = './saleArea';
+       x.pageType = 'SALE_KAIPIAO_AREA';
+       break;
+     case '交车':
+       x.link = './saleArea';
+       x.pageType = 'SALE_JIAOCHE_AREA';
+       break;
+     case '提车量':
+       x.link = './saleArea';
+       x.pageType = 'SALE_TICHE_AREA';
+       break;
+     case '提车金额':
+       x.link = './saleArea';
+       x.pageType = 'SALE_TICHEJIN_AREA';
+       break;
+     case '订单金额':
+       x.link = './saleArea';
+       x.pageType = 'SALE_DINGDANJIN_AREA';
+       break;
+     case '开票金额':
+       x.link = './saleArea';
+       x.pageType = 'SALE_KAIPIAOJIN_AREA';
+       break;
+       //库存
+     case '在库':
+       x.link = './stockArea';
+       x.pageType = 'SALE_ZAIKU_AREA';
+       break;
+     case '在途':
+       x.link = './stockArea';
+       x.pageType = 'SALE_ZAITU_AREA';
+       break;
+     case '可供销':
+       x.link = './stockArea';
+       x.pageType = 'SALE_KEGONGXIAO_AREA';
+       break;
+     case '在库金额':
+       x.link = './stockArea';
+       x.pageType = 'SALE_ZAIKUJIN_AREA';
+       break;
+       //售后
+     case '营收':
+       x.link = './stockYingShouArea';
+       break;
+     case '回厂台次':
+       x.link = './stockHuiChangArea';
+       break;
+     case '工单数':
+       x.link = './stockGongDanArea';
+       break;
+     case '备件订货金额':
+       x.link = './stockBeiJianDingJinArea';
+       break;
+     case '保有客户':
+       x.link = './stockBaoYouKeArea';
+       break;
+     case '备件库存金额':
+       x.link = './stockBeiJianKuJinArea';
+       break;
+       //保险
+     case '新保台次':
+       x.link = './stockXinBaoArea';
+       break;
+     case '新保金额':
+       x.link = './stockXinBaoJinArea';
+       break;
+     case '续保台次':
+       x.link = './stockXuBaoArea';
+       break;
+     case '续保金额':
+       x.link = './stockXuBaoJinArea';
+       break;
+     default:
+       break;
+   }
+ }
+ //品牌与车系不能往下点击
+ const judgeIsBrandOrCar = (x) => {
+   let activeTab = store.state.activeTab;
+   if (activeTab == 2 || activeTab == 3) {
+     x.more = 0;
+   }
+ }
+
+ //处理Index数据
+ const dealWithIndexData = (x) => {
+   transformVal(x); //比较数值，有0或''的值转化成'-'
+   indexLinkTo(x); //添加对应链接
+ }
+
+ //处理SaleArea数据
+ const dealWithSaleAreaData = (x) => {
+   transformVal(x); //比较数值，有0或''的值转化成'-'
+   judgeIsBrandOrCar(x);
+ }
+
+
+
+ //首页四个标签页的入参配置
+ const indexInParame = () => {
+   return {
+     orgType,
+     orgId,
+     orgCode
+   }
+ }
+
+ //按组织入参配置
+ const areaOrgInParame = () => {
+   let startTime = '';
+   let endTime = '';
+   let checkWay = '2'; //查看方式（2、加载所有4、其他时间段）
+   return {
+     orgType,
+     orgId,
+     orgCode,
+     startTime,
+     endTime,
+     checkWay
+   }
+ }
+
+ //按品牌入参配置
+ const areaBrandInParame = () => {
+   let brandCode = '';
+   let startTime = '';
+   let endTime = '';
+   let checkWay = '2'; //查看方式（2、加载所有4、其他时间段）
+   return {
+     orgType,
+     orgId,
+     orgCode,
+     brandCode,
+     startTime,
+     endTime,
+     checkWay
+   }
+ }
+
+  //按车系入参配置
+ const areaCarInParame = () => {
+   let seriesCode = '';
+   let startTime = '';
+   let endTime = '';
+   let checkWay = '2'; //查看方式（2、加载所有4、其他时间段）
+   return {
+     orgType,
+     orgId,
+     orgCode,
+     seriesCode,
+     startTime,
+     endTime,
+     checkWay
+   }
+ }
+
+ export default {
+   dealWithIndexData,
+   dealWithSaleAreaData,
+   indexInParame,
+   areaOrgInParame
+ }

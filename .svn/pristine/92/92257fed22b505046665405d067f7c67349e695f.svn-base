@@ -1,0 +1,158 @@
+<template>
+  <div class="charts">
+    <!-- <div class="fixed"> -->
+    <div id="myChart"></div>
+    <!-- </div> -->
+  </div>
+</template>
+<script>
+import PublicSetEChartVar from '@/utils/PublicSetEChartVar'
+// 引入基本模板
+let echarts = require('echarts/lib/echarts')
+// 引入柱状图组件
+require('echarts/lib/chart/bar')
+// 引入折线图组件
+require('echarts/lib/chart/line')
+// 引入提示框、title组件、标签和其他
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
+require('echarts/lib/component/legend')
+require('echarts/lib/component/toolbox')
+// 区域缩放
+require('echarts/lib/component/dataZoom')
+
+
+let colors = ['#5793f3', '#d14a61', '#675bba', '#675bba'];
+export default {
+  name: 'Echart',
+  data() {
+    return {
+      chart: null,
+      option: {
+        color: PublicSetEChartVar.setColors, //每组数据的颜色
+        tooltip: PublicSetEChartVar.setTooltip, //提示框
+        textStyle: PublicSetEChartVar.setTextStyle,
+        xAxis: {
+          splitLine: PublicSetEChartVar.setSplitLine, //垂直参考线
+          axisTick: PublicSetEChartVar.setAxisTick,
+          axisLine: PublicSetEChartVar.setAxisLineX,
+          data: [], //X坐标轴
+        },
+        yAxis: [{
+            type: 'value',
+            splitLine: PublicSetEChartVar.setSplitLine,
+            axisTick: PublicSetEChartVar.setAxisTick,
+            name: '线索数',
+            min: 0,
+            position: 'left',
+            // interval: 10,
+            axisLine: {
+              lineStyle: {
+                color: 'transparent'
+              }
+            },
+            axisLabel: {
+              formatter: '{value} '
+            }
+          },
+          {
+            type: 'value',
+            splitLine: PublicSetEChartVar.setSplitLine,
+            axisTick: PublicSetEChartVar.setAxisTick,
+            name: '达成率',
+            min: 0,
+            // interval: 100,
+            position: 'right',
+            axisLine: PublicSetEChartVar.setAxisLineY,
+            axisLabel: {
+              formatter: '{value}'
+            }
+          }
+        ],
+        legend: {
+          data: ['日新增', '达成率', '同比', '环比']
+        },
+        series: [{
+            name: '日新增',
+            type: 'bar',
+            itemStyle: PublicSetEChartVar.setBarColors,
+            barMaxWidth: 20,
+            data: []
+          },
+          {
+            name: '达成率',
+            type: 'line',
+            yAxisIndex: 1,
+            itemStyle: PublicSetEChartVar.setLineColors[0],
+            data: []
+          },
+          {
+            name: '同比',
+            type: 'line',
+            yAxisIndex: 1,
+            itemStyle: PublicSetEChartVar.setLineColors[1],
+            data: []
+          },
+          {
+            name: '环比',
+            type: 'line',
+            yAxisIndex: 1,
+            itemStyle: PublicSetEChartVar.setLineColors[1],
+            data: []
+          }
+        ],
+        dataZoom: PublicSetEChartVar.setDataZoom,
+      }
+    }
+  },
+  props: ['updateOption'],
+  mounted() {
+    this.$nextTick(() => {
+      // this.option = this.options;
+      this.resizeCharts(); //设计图表容器
+      this.drawLine(); //绘制图表
+    })
+  },
+  watch: {
+    updateOption: {
+      handler: function(newVal, oldVal) { // 监听外部传入的值,渲染新的的图表数据
+        console.log(1);
+        this.$set(this.option.xAxis,'data',newVal.XData);
+        console.log(newVal);
+        this.$set(this.option.series[0],'data',newVal.YDataAdd);
+        this.$set(this.option.series[1],'data',newVal.YDataRate);
+        this.drawLine();
+      },
+      deep: true
+    }
+  },
+  methods: {
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      this.chart = new echarts.init(document.getElementById('myChart'));
+      // 绘制图表
+      // this.$set(this.option.xAxis,'data',this.updateOption.XData);
+      this.chart.setOption(this.option);
+    },
+    resizeCharts() {
+      //根据屏幕宽高设计图表容器
+      let chartBox = document.getElementsByClassName('charts')[0];
+      let myChart = document.getElementById('myChart');
+      chartBox.style.width = screen.width + 'px';
+      chartBox.style.height = screen.height / 2.5 + 'px';
+      myChart.style.width = screen.width - 20 + 'px';
+      myChart.style.left = 10 + 'px';
+      myChart.style.height = screen.height / 2.5 + 'px';
+    },
+  }
+}
+
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+@import '../styles/var';
+.charts {
+  width: 100%;
+}
+
+</style>

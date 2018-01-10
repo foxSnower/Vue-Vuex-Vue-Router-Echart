@@ -1,0 +1,32 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
+import personnalCenter from '@/pages/personnalCenter'
+import login from '@/pages/login'
+
+
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [
+   {
+      path: '/',
+      name: 'login',
+      meta: { title: '登录' },
+      component: login
+    },
+    {
+      path: '/HelloWorld',
+      name: 'HelloWorld',
+      meta: { title: 'HelloWorld' },
+      component: HelloWorld
+    },
+    {
+      path: '/personnalCenter',
+      name: 'personnalCenter',
+      title: '个人中心',
+      component: personnalCenter
+    },
+  ]
+})

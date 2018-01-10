@@ -1,0 +1,57 @@
+<template>
+  <div class="panel">
+      <div class="left">
+        <p><span class="point"></span>更新时间</p>
+        <p>2017-12-07 19:00</p>
+      </div>
+      <div class="bg"><img src="../assets/img/indexBg.png"></div>
+      <div class="right">
+        <i class="iconfont icon-refresh"></i>
+      </div>
+    </div>
+</template>
+<script>
+export default {
+  name: 'Panel'
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+.panel {
+  position: relative;
+  padding: 15px;
+  color: #fff;
+  &:before{
+    .setTopLine();
+  }
+  .point {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .left,
+  .right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .left {
+    left: 10%;
+  }
+  .right {
+    right: 10%;
+    .icon-refresh {
+      font-size: 3rem;
+    }
+  }
+  .bg {
+    font-size: 0;
+    box-shadow: 5px 5px 10px rgba(19, 153, 248, 0.3);
+  }
+}
+
+</style>

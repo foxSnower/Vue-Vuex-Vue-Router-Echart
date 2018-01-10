@@ -1,0 +1,252 @@
+ import store from '../vuex/store.js'
+
+
+ //比较数值，有0或''的值转化成'-'
+ const transformVal = (val) => {
+   for (var y in val) {
+     if (val[y] == 0 || val[y] == '') {
+       val[y] = '-';
+     }
+   }
+ }
+
+ //添加对应链接
+ const indexLinkTo = (x) => {
+   switch (x.busName || x.name) {
+     //销售
+     case '线索':
+       x.link = './saleArea';
+       x.pageType = 'SALE_XIANSUO_AREA';
+       break;
+     case '来店批次':
+       // x.link = './saleLaiDianArea';
+       x.link = './saleArea';
+       x.pageType = 'SALE_LAIDIAN_AREA';
+       break;
+     case '新增意向':
+       // x.link = './saleYiXiangArea';
+       x.link = './saleArea';
+       x.pageType = 'SALE_YIXIANG_AREA';
+       break;
+     case '订单':
+       x.link = './saleArea';
+       x.pageType = 'SALE_DINGDAN_AREA';
+       break;
+     case '开票':
+       x.link = './saleArea';
+       x.pageType = 'SALE_KAIPIAO_AREA';
+       break;
+     case '交车':
+       x.link = './saleArea';
+       x.pageType = 'SALE_JIAOCHE_AREA';
+       break;
+     case '提车量':
+       x.link = './saleArea';
+       x.pageType = 'SALE_TICHE_AREA';
+       break;
+     case '提车金额':
+       x.link = './saleArea';
+       x.pageType = 'SALE_TICHEJIN_AREA';
+       break;
+     case '订单金额':
+       x.link = './saleArea';
+       x.pageType = 'SALE_DINGDANJIN_AREA';
+       break;
+     case '开票金额':
+       x.link = './saleArea';
+       x.pageType = 'SALE_KAIPIAOJIN_AREA';
+       break;
+       //库存
+     case '在库':
+       x.link = './stockArea';
+       x.pageType = 'STOCK_ZAIKU_AREA';
+       break;
+     case '在途':
+       x.link = './stockArea';
+       x.pageType = 'STOCK_ZAITU_AREA';
+       break;
+     case '可供销':
+       x.link = './stockArea';
+       x.pageType = 'STOCK_KEGONGXIAO_AREA';
+       break;
+     case '在库金额':
+       x.link = './stockArea';
+       x.pageType = 'STOCK_ZAIKUJIN_AREA';
+       break;
+       //售后
+     case '营收':
+       x.link = './stockYingShouArea';
+       break;
+     case '回厂台次':
+       x.link = './stockHuiChangArea';
+       break;
+     case '工单数':
+       x.link = './stockGongDanArea';
+       break;
+     case '备件订货金额':
+       x.link = './stockBeiJianDingJinArea';
+       break;
+     case '保有客户':
+       x.link = './stockBaoYouKeArea';
+       break;
+     case '备件库存金额':
+       x.link = './stockBeiJianKuJinArea';
+       break;
+       //保险
+     case '新保台次':
+       x.link = './stockXinBaoArea';
+       break;
+     case '新保金额':
+       x.link = './stockXinBaoJinArea';
+       break;
+     case '续保台次':
+       x.link = './stockXuBaoArea';
+       break;
+     case '续保金额':
+       x.link = './stockXuBaoJinArea';
+       break;
+     default:
+       break;
+   }
+ }
+ //品牌与车系不能往下点击
+ const judgeIsBrandOrCar = (x) => {
+   let activeTab = store.state.activeTab;
+   if (activeTab == 2 || activeTab == 3) {
+     x.more = 0;
+   }
+ }
+ //判断是否为选择时间段的数据，是设置isCount = true
+ const judgeIsCount = (x) => {
+   let checkWay = store.state.dateSelect.checkWay;
+   if (checkWay == '4') {
+     x.isCount = true;
+   } else {
+     x.isCount = false;
+   }
+ }
+
+
+ //处理Index数据
+ const dealWithIndexData = (x, indexPage) => {
+   transformVal(x); //比较数值，有0或''的值转化成'-'
+   indexLinkTo(x); //添加对应链接
+ }
+
+ //处理SaleArea数据
+ const dealWithSaleAreaData = (x) => {
+   transformVal(x); //比较数值，有0或''的值转化成'-'
+   judgeIsBrandOrCar(x); //品牌与车系不能往下点击
+   judgeIsCount(x); //判断是否为选择时间段的数据，是设置isCount = true
+ }
+
+ //处理Stock数据
+ const dealWithStockAreaData = (x) => {
+   transformVal(x); //比较数值，有0或''的值转化成'-'
+   judgeIsBrandOrCar(x); //品牌与车系不能往下点击
+   x.isCount = true;
+ }
+
+
+
+ //首页四个标签页的入参配置
+ const indexInParame = () => {
+   const loginInfo = store.state.loginInfo ? store.state.loginInfo : JSON.parse(sessionStorage.getItem('loginInfo'));
+   const orgType = loginInfo.orgType; //1 集团 2大区 3 小区 4 4s店
+   const orgId = loginInfo.orgId;
+   const orgCode = loginInfo.orgCode;
+   return {
+     orgType,
+     orgId,
+     orgCode
+   }
+ }
+
+ //按组织入参配置
+ const areaOrgInParame = () => {
+   const loginInfo = store.state.loginInfo ? store.state.loginInfo : JSON.parse(sessionStorage.getItem('loginInfo'));
+   const orgType = loginInfo.orgType; //1 集团 2大区 3 小区 4 4s店
+   const orgId = loginInfo.orgId;
+   const orgCode = loginInfo.orgCode;
+   let startTime = '';
+   let endTime = '';
+   let checkWay = '2'; //查看方式（2、加载所有4、其他时间段）
+   return {
+     orgType,
+     orgId,
+     orgCode,
+     startTime,
+     endTime,
+     checkWay
+   }
+ }
+
+ //按品牌入参配置
+ const areaBrandInParame = () => {
+   const loginInfo = store.state.loginInfo ? store.state.loginInfo : JSON.parse(sessionStorage.getItem('loginInfo'));
+   const orgType = loginInfo.orgType; //1 集团 2大区 3 小区 4 4s店
+   const orgId = loginInfo.orgId;
+   const orgCode = loginInfo.orgCode;
+   let brandCode = 'all';
+   let startTime = '';
+   let endTime = '';
+   let checkWay = '2'; //查看方式（2、加载所有4、其他时间段）
+   return {
+     orgType,
+     orgId,
+     orgCode,
+     brandCode,
+     startTime,
+     endTime,
+     checkWay
+   }
+ }
+
+ //按车系入参配置
+ const areaCarInParame = () => {
+   const loginInfo = store.state.loginInfo ? store.state.loginInfo : JSON.parse(sessionStorage.getItem('loginInfo'));
+   const orgType = loginInfo.orgType; //1 集团 2大区 3 小区 4 4s店
+   const orgId = loginInfo.orgId;
+   const orgCode = loginInfo.orgCode;
+   let seriesCode = 'all';
+   let startTime = '';
+   let endTime = '';
+   let checkWay = '2'; //查看方式（2、加载所有4、其他时间段）
+   return {
+     orgType,
+     orgId,
+     orgCode,
+     seriesCode,
+     startTime,
+     endTime,
+     checkWay
+   }
+ }
+
+ const stockInParame = () => {
+   let loginInfo = store.state.loginInfo ? store.state.loginInfo : JSON.parse(sessionStorage.getItem('loginInfo'));
+   let orgType = loginInfo.orgType; //1 集团 2大区 3 小区 4 4s店
+   let orgId = loginInfo.orgId;
+   let orgCode = loginInfo.orgCode;
+   let time = store.state.stockDateSelect + '-01';
+   let brandCode = []; //品牌
+   let seriesCode = []; //品牌
+   return {
+     orgType,
+     orgId,
+     orgCode,
+     time,
+     brandCode,
+     seriesCode
+   }
+ }
+ export default {
+   dealWithIndexData,
+   dealWithSaleAreaData,
+   dealWithStockAreaData,
+   indexInParame,
+   areaOrgInParame,
+   areaBrandInParame,
+   areaCarInParame,
+   stockInParame
+ }

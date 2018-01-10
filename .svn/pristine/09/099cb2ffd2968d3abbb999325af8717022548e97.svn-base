@@ -1,0 +1,161 @@
+<template>
+  <div class="f-flex tr" :class="{head:data.head!=null}" @click="linkTo(data.head,data.link)">
+    <!-- tableHead -->
+    <template v-if="data.head!=null">
+      <div class="lable">{{data.lable}}</div>
+      <!-- 4列数据 -->
+      <template v-if="data.type==1">
+        <div class="f-item">{{data.day}}</div>
+        <div class="f-item">
+          <p :class="{'font-scale':getStrLeng(data.month)>=setLength}" >{{data.month}}</p><span class="tips">{{data.monthRate}}</span></div>
+        <div class="f-item">
+          <p :class="{'font-scale':getStrLeng(data.year)>=setLength}">{{data.year}}</p><span class="tips">{{data.yearRate}}</span>
+        </div>
+        <i class="iconfont icon-gengduo transparent"></i>
+      </template>
+      <!-- 2列数据 -->
+      <template v-if="data.type==2">
+        <div class="f-item f-txt-right">{{data.total}}</div>
+        <i class="iconfont icon-gengduo transparent"></i>
+      </template>
+    </template>
+    <!-- tableBody -->
+    <template v-else >
+      <div class="lable"><span class="point" :style="{backgroundColor:colors[index-1]}"></span>{{data.lable}}</div>
+      <!-- 4列数据 -->
+      <template v-if="data.type==1">
+        <div class="f-item">{{data.day}}</div>
+        <div class="f-item">
+          <p :class="{'font-scale':getStrLeng(data.month)>=setLength}">{{data.month}}</p><span class="tips" :class="{red:parseFloat(data.monthRate/10)>=1}">{{parseFloat(data.monthRate)*10+'%'}}</span></div>
+        <div class="f-item">
+          <p :class="{'font-scale':getStrLeng(data.year)>=setLength}">{{data.year}}</p><span class="tips" :class="{red:parseFloat(data.yearRate/10)>=1}">{{parseFloat(data.yearRate*10)+'%'}}</span>
+        </div>
+        <i class="iconfont icon-gengduo" :class="{transparent:data.more==0}"></i>
+      </template>
+      <!-- 2列数据 -->
+      <template v-if="data.type==2">
+        <div class="f-item f-txt-right">{{data.total}}</div>
+        <i class="iconfont icon-gengduo" :class="{transparent:data.more==0}"></i>
+      </template>
+    </template>
+  </div>
+  <!--  <div class="f-flex tr" :class="{head:head!=null}">
+      <div class="lable">数据</div>
+      <div class="f-item">日新增</div>
+      <div class="f-item">
+        <p>月累计</p><span class="tips">达成率</span></div>
+      <div class="f-item">年累计</div>
+      <i class="iconfont icon-gengduo" style="color: transparent;"></i>
+    </div> -->
+  <!-- <div class="f-flex tr" v-if="body!=null">
+      <div class="lable"><span class="point"></span>线索</div>
+      <div class="f-item">586</div>
+      <div class="f-item">
+        <p>6534</p><span class="tips red">20%</span></div>
+      <div class="f-item">76.00</div>
+      <i class="iconfont icon-gengduo"></i>
+    </div> -->
+  <!-- <div class="f-flex tr">
+      <div class="lable">线索</div>
+      <div class="f-item">586</div>
+      <div class="f-item">
+        <p>6534</p><span class="tips">20%</span></div>
+      <div class="f-item">76.00</div>
+      <i class="iconfont icon-gengduo"></i>
+    </div> -->
+  </div>
+</template>
+<script>
+import PublicMethods from '@/utils/PublicMethods'
+export default {
+  name: 'MyTableTr',
+  data() {
+    return {
+      setLength:7,//设置字符串最大长度
+      colors: ['#ff797a', '#ffb55e', '#21dacf', '#51acff', '#d376ff', '#ff797a', '#ffb55e', '#21dacf', '#51acff']//点的颜色
+    }
+  },
+  props: ['data', 'index'],
+  mounted(){
+  console.log();
+  },
+  methods:{
+    linkTo(head,url){
+      if(head==null){
+          this.$router.push(url);
+      }
+    },
+    getStrLeng(str){
+        return PublicMethods.getStrLeng(str);
+    }
+  },
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+
+.table {
+  font-size: @normalSize;
+  border-top: 1px solid @borderColor;
+  border-bottom: 1px solid @borderColor;
+  .tr {
+    position: relative;
+    +.tr:before {
+      .setTopLine();
+    }
+    >div {
+      padding: 20px 0;
+    }
+    .tips {
+      position: absolute;
+      bottom: 5px;
+      font-size: @tinySize;
+      color: @gray;
+      width: 100%;
+      left: 0;
+      &.red {
+        color: #ff8d8e;
+      }
+    }
+    .font-scale{
+      font-size: @tinySize;
+    }
+    .lable {
+      width: 9rem;
+      text-align: left;
+      padding-left: 10px;
+      .point {
+        width: 10px;
+        height: 10px;
+        border-radius: 10px;
+        background-color: orange;
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+    .icon-gengduo {
+      padding-right: 10px;
+      color: @borderColor;
+      &.transparent {
+        color: transparent;
+      }
+    }
+  }
+  .head {
+    .lable {
+      padding-left: 30px;
+      width: 80px;
+    }
+    background-color: #f7f7f7;
+    color: @lighterColor;
+    >div {
+      padding: 10px 0 15px;
+      .tips {
+        bottom: 0;
+      }
+    }
+  }
+}
+
+</style>

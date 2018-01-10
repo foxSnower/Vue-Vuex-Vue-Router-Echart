@@ -1,0 +1,196 @@
+<template>
+  <div class="charts">
+    <div class="fixed">
+      <div id="myChart"></div>
+    </div>
+  </div>
+</template>
+<script>
+// 引入基本模板
+let echarts = require('echarts/lib/echarts')
+// 引入柱状图组件
+require('echarts/lib/chart/bar')
+// 引入折线图组件
+require('echarts/lib/chart/line')
+// 引入提示框、title组件、标签和其他
+require('echarts/lib/component/tooltip')
+require('echarts/lib/component/title')
+require('echarts/lib/component/legend')
+require('echarts/lib/component/toolbox')
+// 引入提示框和title组件
+require('echarts/lib/component/dataZoom')
+
+
+let colors = ['#5793f3', '#d14a61', '#675bba', '#675bba'];
+export default {
+  name: 'Echart',
+  data() {
+    return {
+      option: {
+        color: colors, //柱状图颜色
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        // toolbox: {
+        //   feature: {
+        //     dataView: { show: true, readOnly: false },
+        //     magicType: { show: true, type: ['line', 'bar'] },
+        //     restore: { show: true },
+        //     saveAsImage: { show: true }
+        //   }
+        // },
+        // title: { text: 'ECharts 入门示例' },
+        // backgroundColor: 'orange', //图表背景颜色
+        textStyle: { //字体颜色
+          color: 'rgba(0, 0, 0, 0.9)'
+        },
+        xAxis: {
+          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+        },
+        yAxis: [{
+            type: 'value',
+            name: '数量',
+            min: 0,
+            max: 50,
+            position: 'left',
+            interval: 10,
+            axisLine: {
+              lineStyle: {
+                color: colors[0]
+              }
+            },
+            axisLabel: {
+              formatter: '{value} '
+            }
+          },
+          {
+            type: 'value',
+            name: '金额(W)',
+            min: 0,
+            max: 500,
+            interval: 100,
+            position: 'right',
+            axisLine: {
+              lineStyle: {
+                color: colors[1]
+              }
+            },
+            axisLabel: {
+              formatter: '{value}'
+            }
+          },
+          {
+            type: 'value',
+            name: '百分比(%)',
+            min: 0,
+            max: 100,
+            interval: 20,
+            position: 'right',
+            offset: 100,
+            axisLine: {
+              lineStyle: {
+                color: colors[2]
+              }
+            },
+            axisLabel: {
+              formatter: '{value}'
+            }
+          }
+        ],
+        legend: {
+          data: ['销量', '销量2', '销量3', '销量4']
+        },
+        series: [{
+            name: '销量',
+            type: 'bar',
+            data: [5, 20, 36, 10, 10, 20]
+          },
+          {
+            name: '销量2',
+            type: 'line',
+            yAxisIndex: 1,
+            data: [105, 200, 369, 109, 109, 290]
+          },
+          {
+            name: '销量3',
+            type: 'line',
+            yAxisIndex: 2,
+            data: [11.21, 10.34, 16.87, 17.04, 12.86, 13.94]
+          },
+          {
+            name: '销量4',
+            type: 'line',
+            yAxisIndex: 2,
+            data: [12.21, 11.34, 13.87, 12.04, 14.86, 15.94]
+          }
+        ],
+        dataZoom: [{ // 这个dataZoom组件，默认控制x轴。
+            type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
+            start: 0, // 左边在 10% 的位置。
+            end: 100 // 右边在 100% 的位置。
+          },
+          { // 这个dataZoom组件，也控制x轴。
+            type: 'inside', // 这个 dataZoom 组件是 inside 型 dataZoom 组件
+            start: 0, // 左边在 10% 的位置。
+            end: 100 // 右边在 100% 的位置。
+          }
+        ],
+      }
+    }
+  },
+  // props: ['options'],
+  mounted() {
+    this.$nextTick(() => {
+      // this.option = this.options;
+      this.resizeCharts(); //设计图表容器
+      this.drawLine(); //绘制图表
+    })
+  },
+  methods: {
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = echarts.init(document.getElementById('myChart'));
+      myChart.on('click', params => {
+        this.echartsClicked(params);
+      })
+      // 绘制图表
+      myChart.setOption(this.option);
+    },
+    resizeCharts() {
+      //根据屏幕宽高设计图表容器
+      let chartBox = document.getElementsByClassName('charts')[0];
+      let myChart = document.getElementById('myChart');
+      chartBox.style.width = screen.width + 'px';
+      chartBox.style.height = screen.height / 2 + 'px';
+      myChart.style.width = screen.width - 20 + 'px';
+      myChart.style.height = screen.height / 2 + 'px';
+    },
+    echartsClicked(params) {
+      console.log(params);
+      this.$emit('click', params);
+    }
+  }
+}
+
+</script>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style lang="less" scoped>
+@import '../styles/var';
+.charts {
+  width: 100%;
+  .fixed {
+    background-color: @while;
+    position: fixed;
+    padding: 0 10px;
+  }
+}
+
+
+
+</style>

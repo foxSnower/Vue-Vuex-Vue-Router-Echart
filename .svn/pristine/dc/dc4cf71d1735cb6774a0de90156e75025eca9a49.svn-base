@@ -1,0 +1,337 @@
+<template>
+  <transition name="slide-fade">
+    <div class="slide" v-if="showMyCarSelect">
+      <div class="select-mask" @click.preventDefault @click="close"></div>
+      <div class="select">
+        <div class="select-header">
+          <div class="left" @click.preventDefault @click="close">取消</div>
+          <div class="center">
+            <span>选择查看车系({{selectedLength}}/{{carList.length}})</span>
+          </div>
+          <div class="right" @click="onOk">确定 </div>
+        </div>
+        <div class="select-content" :style="{maxHeight:resizeHeight}">
+          <div class="car-series" :style="{maxHeight:resizeHeight}">
+            <div class="series-items" v-for="(item,index) in brandList" :key="index" @click="setBrandCheck(item,index)" :class="{active: brandIndex==index}">
+              <div :class="{active1: brandIndex==index,'auto-font':getStrLeng(item.brandName)}">
+                {{ item.brandName }}
+              </div>
+            </div>
+          </div>
+          <div class="car-box" :style="{maxHeight:resizeHeight}">
+            <div class="box-items" v-for="(items,index) in filterCarList" @click="setCarCheck(items,index)">
+              <span :class="{active: items.check==true,'auto-font':getStrLeng(items.name)}">{{items.name}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+</template>
+<script>
+import { mapState, mapActions } from 'vuex'
+import PublicMethods from '@/utils/PublicMethods'
+
+export default {
+  name: 'MyCarSelect',
+  data() {
+    return {
+      brandIndex: 0,
+      carList: [],
+      filterCarList: [], //选择品牌过滤的车系
+      brandList: [{
+        brandCode: 'all',
+        brandName: '全部车系'
+      }],
+      first: true,
+      selectedLength: 0
+    }
+  },
+  watch: {
+    showMyCarSelect: function(newVal) {
+      if (newVal) {
+        this.getAPI();
+      }
+    }
+  },
+  methods: {
+    ...mapActions(['updateMyCarSelect', 'updateShowMyCarSelect']),
+    getAPI() {
+      this.carList.splice(0, 10000); //初始化列表
+      this.brandIndex = 0;
+      let pageType = this.$route.query.pageType + '_CAR';
+      if (this[pageType] != null) {
+        this.carList = this.carList.concat(this[pageType]);
+        this.filterCarList = this.carList;
+        this.initData();
+      }
+    },
+    initData() {
+      // if (this.first) {
+      this.carList.forEach((x, index1) => {
+        if (this.brandList.length > 0) {
+          //第二条数据开始对比，遍历brandList所有的brandCode都不等于x.brandCode，说明在还未存贮在brandList中
+          let isNotStore = this.brandList.every((y, index2) => {
+            return y.brandCode !== x.brandCode;
+          });
+          if (isNotStore) { //未存贮把此品牌、车系存入
+            this.brandList.push(x);
+          }
+        } else {
+          //第一条数据直接存入
+          this.brandList.push(x);
+        }
+      })
+      //第一次选择品牌默认全选
+      if (this.first) {
+        this.carList.forEach((x, index) => {
+          x.check = true
+          this.selectedLength = this.carList.length;
+          this.first = false;
+        })
+      }
+      // }
+    },
+    close() {
+      this.updateShowMyCarSelect(false);
+    },
+    setBrandCheck: function(item, index) {
+      this.brandIndex = index;
+      let selectedBrand = [];
+      this.carList.forEach((x, index) => {
+        if (item.brandCode == x.brandCode) {
+          selectedBrand.push(x)
+        }
+        if (item.brandCode == 'all') {
+          selectedBrand = this.carList
+        }
+      })
+      this.filterCarList = selectedBrand;
+    },
+    setCarCheck: function(item, idx) {
+      this.filterCarList[idx].check = !this.filterCarList[idx].check;
+      // this.filterCarList[idx].check = !this.filterCarList[idx].check;
+      let length = 0;
+      this.filterCarList.forEach((x, index) => {
+        let filterCode = x.code;
+        this.carList.forEach((y, index) => {
+          if (y.code == filterCode) {
+            y.check = x.check
+          }
+        })
+      });
+      this.carList.forEach((y, index) => {
+        if (y.check == true) {
+          length++;
+        }
+      }) 
+      this.selectedLength = length;
+    },
+    onOk() {
+      let pageType = this.$route.query.pageType + '_CAR';
+      let selectedCar = [];
+      if (this.selectedLength == this.carList.length) {
+        selectedCar = this[pageType];
+      } else {
+        this.carList.forEach((y, inedx) => {
+          if (y.check == true) {
+            selectedCar.push(y);
+          }
+        })
+      }
+      this.updateMyCarSelect(selectedCar)
+      this.updateShowMyCarSelect(false);
+      console.log(selectedCar);
+    },
+    getStrLeng(str) {
+      //数据长度与设置的长度比较
+      if (PublicMethods.getStrLeng(str) >= PublicMethods.setSelectMaxLength) {
+        return true
+      } else {
+        return false
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      activeTab: state => state.activeTab,
+      showMyCarSelect: state => state.showMyCarSelect,
+      myCarSelect: state => state.myCarSelect,
+
+      SALE_XIANSUO_AREA_CAR: state => state.SALE_XIANSUO_AREA_CAR,
+      SALE_LAIDIAN_AREA_CAR: state => state.SALE_LAIDIAN_AREA_CAR,
+      SALE_YIXIANG_AREA_CAR: state => state.SALE_YIXIANG_AREA_CAR,
+      SALE_DINGDAN_AREA_CAR: state => state.SALE_DINGDAN_AREA_CAR,
+      SALE_KAIPIAO_AREA_CAR: state => state.SALE_KAIPIAO_AREA_CAR,
+      SALE_JIAOCHE_AREA_CAR: state => state.SALE_JIAOCHE_AREA_CAR,
+      SALE_TICHE_AREA_CAR: state => state.SALE_TICHE_AREA_CAR,
+      SALE_TICHEJIN_AREA_CAR: state => state.SALE_TICHEJIN_AREA_CAR,
+      SALE_DINGDANJIN_AREA_CAR: state => state.SALE_DINGDANJIN_AREA_CAR,
+      SALE_KAIPIAOJIN_AREA_CAR: state => state.SALE_KAIPIAOJIN_AREA_CAR,
+    }),
+    resizeHeight() {
+      //根据屏幕高度设计容器
+      return screen.height * 0.5 - 50 + 'px';
+    },
+  },
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var.less';
+.slide {
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  .select-mask {
+    z-index: 99;
+    background-color: black;
+    opacity: 0.5;
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+  }
+  .select {
+    z-index: 100;
+    position: fixed;
+    bottom: 0;
+    height: 50%;
+    width: 100%;
+    background-color: #fff;
+    .select-header {
+      height: @normalHeight;
+      line-height: @normalHeight;
+      position: relative;
+      font-size: @normalSize;
+      color: @themeColor;
+      background-color: #fff;
+      text-align: center;
+      .left {
+        position: absolute;
+        width: 70px;
+        top: 0;
+        left: 0;
+      }
+      .center {
+        color: #000;
+      }
+      .right {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 70px;
+      }
+    }
+    .select-header:before {
+      .setBottomLine()
+    }
+    .select-content {
+      background-color: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      .car-series {
+        font-size: @normalSize;
+        display: inline-block;
+        width: 25%;
+        overflow: auto;
+        .series-items {
+          position: relative;
+          border: none;
+          width: 100%;
+          padding: 14px 0;
+          text-align: center;
+          background-color: #f3f3f3;
+          overflow: hidden;
+          &:after {
+            .setBottomLine();
+          }
+          &:before {
+            .setRightLine();
+          }
+          div {
+            position: relative;
+            &:before {
+              position: absolute;
+              left: 0;
+              content: '';
+              height: 0;
+              width: 2px;
+              background: red;
+            }
+            &.active1:before {
+              background-color: #fff;
+              color: @themeColor ;
+              border-left: 2px solid @themeColor;
+              transition: height .3s;
+              height: 100%;
+            }
+          }
+        }
+        .active {
+          background-color: #fff;
+          color: @themeColor ;
+        }
+      }
+      .car-box {
+        /* display: inline-block;
+        width: 75%;
+        height: 80%;
+        overflow: auto;*/
+        width: 75%;
+        height: 100%;
+        background-color: #fff;
+        overflow: auto;
+        display: flex;
+        flex-wrap: wrap;
+        .box-items {
+          width: 50%;
+          margin: auto 0;
+          span {
+            margin: 8px 5px 2px;
+            padding: 8px 2px;
+            display: block;
+            border: 1px solid @borderColor;
+            border-radius: 5px;
+            text-align: center;
+            line-height: initial;
+          }
+          .active {
+            border: 1px solid #65BCFA;
+          }
+        }
+      }
+    }
+  }
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .slide .select .select-content .car-box .box-items {
+    width: 33.3%;
+  }
+}
+
+@media screen and (max-width: 414px) {
+  .slide .select .select-content .car-box .box-items {
+    width: 50%;
+  }
+}
+
+</style>

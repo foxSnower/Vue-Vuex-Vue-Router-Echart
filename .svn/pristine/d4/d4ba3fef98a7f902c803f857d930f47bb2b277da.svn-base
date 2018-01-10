@@ -1,0 +1,165 @@
+<template>
+  <div class="select">
+    <div class="sele-mask"></div>
+    <div class="select-header">
+      <div class="left" @click.preventDefault @click="onClickCancel" >取消</div>
+      <div class="center">
+
+          <span>选择查看品牌{{title}}({{selectedLength}}/{{list.length}})</span>
+
+      </div>
+      <div class="right" @click="onClickSubmit">确定</div>
+    </div>
+    <div class="select-content">
+      <div class="items" v-for="(item,index) in list" >
+        <span :data-index="index" @click="setListCheck(index)" :class="{active: item.check==true}">
+        {{ item.check }}
+        </span>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  export default {
+    name:'MyBrandSelect',
+    data(){
+      return{
+        itemSelected:{},
+        list: [
+          {check: false, label: '1'},
+          {check: false, label: '2'},
+          {check: false, label: '3'},
+          {check: false, label: '4'},
+          {check: false, label: '5'},
+          {check: false, label: '6'},
+          {check: false, label: '7'},
+          {check: false, label: '8'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'},
+          {check: false, label: '9'}
+        ],
+        selectedLength:0,
+        selectedBrand:[]
+      }
+    },
+
+    props:{
+      headerTransition: {
+        type: String,
+        default: 'header-fade-in-right'
+      },
+      title: String
+    },
+    computed:{},
+    methods:{
+      onClickCancel(){
+        this.$store.commit('showMyBrandSelect',false)
+      },
+      setListCheck: function(idx) {
+        const check = this.list[idx].check;
+        this.list[idx].check = check === true ? false : true;
+        let length= 0 ;
+        this.list.forEach((y,index)=>{
+          if(y.check==true){
+            length++;
+          }
+        });
+        this.selectedLength=length;
+      },
+      onClickSubmit(){
+        this.selectedBrand=[];
+        this.list.forEach((y,index)=>{
+          if(y.check==true){
+            this.selectedBrand.push(y.label)
+          }
+        })
+        console.log(this.selectedBrand);
+      }
+    }
+  }
+</script>
+<style lang="less" scoped="scoped">
+  @import '../styles/var.less';
+  .select{
+    position:fixed;
+    bottom:0;
+    height:40%;
+    .sele-mask{
+      z-index:-1;
+      background-color: black;
+      opacity:0.6;
+      position:fixed;
+      bottom: 0;
+      height:100%;
+      width: 100%;
+    }
+    .select-header{
+      height:@normalHeight;
+      line-height:@normalHeight;
+      position: relative;
+      font-size:1.8rem;
+      color: @themeColor;
+      background-color: #fff;
+      text-align: center;
+      .left{
+        position:absolute;
+        width: 70px;
+        top:0;
+        left: 0;
+      }
+      .center{
+        color: #000;
+      }
+      .right{
+        position: absolute;
+        right:0;
+        top: 0;
+        width: 70px;
+      }
+    }
+    .select-header:before{
+      .setBottomLine()
+    }
+    .select-content{
+      height: 100%;
+      background-color: #fff;
+      border-bottom: 1px solid @borderColor;
+      overflow: auto;
+      .items{
+        /*border: 1px solid #ccc;*/
+        width: 25%;
+        height: 33px;
+        line-height: 33px;
+        font-size:1.3rem;
+        text-align: center;
+        float: left;
+        /*margin-left:10px;*/
+        margin-top:10px;
+        span{
+          display: inline-block;
+          border: 1px solid @borderColor;
+          width: 77px;
+        }
+      }
+    }
+  }
+  .active{
+    background-color: #ccc;
+  }
+</style>

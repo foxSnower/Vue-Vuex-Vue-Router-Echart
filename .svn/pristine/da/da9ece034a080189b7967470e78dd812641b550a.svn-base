@@ -1,0 +1,96 @@
+<template>
+  <div>
+    <Panel></Panel>
+    <!-- <MyTable :data="data"></MyTable> -->
+    <router-view/>
+    <BottomTab></BottomTab>
+  </div>
+</template>
+<script>
+import api from '@/api/api.js'
+import Panel from '@/components/Panel'
+import MyTable from '@/components/MyTable'
+import BottomTab from '@/components/BottomTab'
+export default {
+  name: 'index',
+  data() {
+    return {
+      data: [{
+        head: true,
+        lable: '数据',
+        day: '日新增',
+        month: '月累计',
+        monthRate: '达成率',
+        year: '年累计',
+        yearRate: '达成率',
+        more:0,
+      }, {
+        lable: '线索',
+        day: '30',
+        month: '900',
+        monthRate: '15.3',
+        year: '987008',
+        yearRate: '2',
+        more:1,
+      },
+       {
+        lable: '线索',
+        day: '30',
+        month: '900',
+        monthRate: '15.3',
+        year: '987008',
+        yearRate: '2',
+        more:0,
+      },
+      {
+        lable: '新增意向',
+        day: '30',
+        month: '900',
+        monthRate: '15.3',
+        year: '987008',
+        yearRate: '2',
+        more:0,
+      },
+      {
+        lable: '线索',
+        day: '30',
+        month: '900',
+        monthRate: '15.3',
+        year: '987008',
+        yearRate: '2',
+        more:0,
+      },
+      {
+        lable: '线索',
+        day: '30',
+        month: '900',
+        monthRate: '15.3',
+        year: '987008',
+        yearRate: '2',
+        more:0,
+      },
+      {
+        lable: '线索',
+        day: '30',
+        month: '900',
+        monthRate: '15.3',
+        year: '987008',
+        yearRate: '2',
+        more:0,
+      }]
+    }
+  },
+  components: {
+  	Panel,
+    MyTable,
+    BottomTab
+  }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+
+
+
+</style>

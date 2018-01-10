@@ -1,0 +1,33 @@
+<template>
+  <div class="select">
+    <div class="select-header">
+      <div class="left">取消</div>
+      <div class="right">确定</div>
+    </div>
+    <div class="select-content"></div>
+  </div>
+</template>
+<script>
+  export default {
+    name:'select',
+    props:{},
+    computed:{},
+    methods:{}
+  }
+</script>
+<style lang="less" scoped="scoped">
+  @import '../styles/var.less';
+  .select{
+    .select-header{
+      height:@normalHeight;
+      border: 1px solid #ccc;
+      .left{
+
+      }
+      .right{
+
+      }
+    }
+  }
+
+</style>

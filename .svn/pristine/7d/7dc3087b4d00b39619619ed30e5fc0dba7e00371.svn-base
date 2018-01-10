@@ -1,0 +1,13 @@
+<template>
+  <publicPage></publicPage>
+</template>
+<script>
+
+import publicPage from '@/pages/publicPage'
+export default {
+  name: 'saleXianSuoArea',
+  components: {
+    publicPage
+  }
+}
+</script>

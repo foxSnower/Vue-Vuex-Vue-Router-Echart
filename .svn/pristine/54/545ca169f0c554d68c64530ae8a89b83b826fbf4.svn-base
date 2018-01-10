@@ -1,0 +1,30 @@
+<template>
+  <div class="table">
+    <MyTableTr v-for="(x,index) in tableData" :key="index" :tableData="x" :index="index"></MyTableTr>
+  </div>
+</template>
+<script>
+import MyTableTr from '@/components/MyTableTr'
+export default {
+  name: 'MyTable',
+  components: {
+    MyTableTr
+  },
+  props: ['tableData']
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+.table {
+  font-size: @normalSize;
+  position: relative;
+  &:before {
+    .setTopLine();
+  }
+  &:after {
+    .setBottomLine();
+  }
+}
+
+</style>

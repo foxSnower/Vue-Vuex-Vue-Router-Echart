@@ -1,0 +1,147 @@
+//比较数值，有0或''的值转化成'-'
+const transformVal = (val) => {
+  for (var y in val) {
+    if (val[y] == 0 || val[y] == '') {
+      val[y] = '-';
+    }
+  }
+}
+
+//添加对应链接
+const indexLinkTo = (x) => {
+  switch (x.busName) {
+    //销售
+    case '线索':
+      x.link = './saleArea';
+      x.saleType = 'SALE_XIANSUO_AREA';
+      break;
+    case '来店批次':
+      // x.link = './saleLaiDianArea';
+      x.link = './saleArea';
+      x.saleType = 'SALE_LAIDIAN_AREA';
+      break;
+    case '新增意向':
+      // x.link = './saleYiXiangArea';
+      x.link = './saleArea';
+      x.saleType = 'SALE_YIXIANG_AREA';
+      break;
+    case '订单':
+      x.link = './saleArea';
+      x.saleType = 'SALE_DINGDAN_AREA';
+      break;
+    case '开票':
+      x.link = './saleArea';
+      x.saleType = 'SALE_KAIPIAO_AREA';
+      break;
+    case '交车':
+      x.link = './saleArea';
+      x.saleType = 'SALE_JIAOCHE_AREA';
+      break;
+    case '提车量':
+      x.link = './saleArea';
+      x.saleType = 'SALE_TICHE_AREA';
+      break;
+    case '提车金额':
+      x.link = './saleArea';
+      x.saleType = 'SALE_TICHEJIN_AREA';
+      break;
+    case '订单金额':
+      x.link = './saleArea';
+      x.saleType = 'SALE_DINGDANJIN_AREA';
+      break;
+    case '开票金额':
+      x.link = './saleArea';
+      x.saleType = 'SALE_KAIPIAOJIN_AREA';
+      break;
+      //库存
+    case '在库':
+      x.link = './stockZaiKuArea';
+      break;
+    case '在途':
+      x.link = './stockZaiTuArea';
+      break;
+    case '可供销':
+      x.link = './stockGongXiaoArea';
+      break;
+    case '在库金额':
+      x.link = './stockZaiKuJinArea';
+      break;
+      //售后
+    case '营收':
+      x.link = './stockYingShouArea';
+      break;
+    case '回厂台次':
+      x.link = './stockHuiChangArea';
+      break;
+    case '工单数':
+      x.link = './stockGongDanArea';
+      break;
+    case '备件订货金额':
+      x.link = './stockBeiJianDingJinArea';
+      break;
+    case '保有客户':
+      x.link = './stockBaoYouKeArea';
+      break;
+    case '备件库存金额':
+      x.link = './stockBeiJianKuJinArea';
+      break;
+      //保险
+    case '新保台次':
+      x.link = './stockXinBaoArea';
+      break;
+    case '新保金额':
+      x.link = './stockXinBaoJinArea';
+      break;
+    case '续保台次':
+      x.link = './stockXuBaoArea';
+      break;
+    case '续保金额':
+      x.link = './stockXuBaoJinArea';
+      break;
+    default:
+      break;
+  }
+}
+
+
+//处理数据
+const dealWithData = (x) => {
+  transformVal(x); //比较数值，有0或''的值转化成'-'
+  indexLinkTo(x); //添加对应链接
+}
+
+//首页四个标签页的入参配置
+const indexInParame = () => {
+  let loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
+  let orgType = loginInfo.data.orgType;
+  let orgId = loginInfo.data.orgId;
+  let orgCode = loginInfo.data.orgCode;
+  return {
+    orgType,
+    orgId,
+    orgCode
+  }
+}
+
+//首页四个标签页的入参配置
+const areaInParame = () => {
+  let loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'));
+  let orgId = loginInfo.data.orgId;
+  let brandCodes = [];
+  let startTime = '';
+  let endTime = '';
+  let checkWay = 1;//1、日新增2、月累计3、年累计4、其他时间段
+  return {
+    orgId,
+    brandCodes,
+    startTime,
+    endTime,
+    checkWay
+  }
+}
+
+export default {
+  dealWithData,
+  indexInParame,
+  areaInParame
+}

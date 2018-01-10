@@ -1,0 +1,68 @@
+/**
+ * 所有样式文件放在此页面
+ * 
+ * 
+ */
+
+@import 'reset.less';
+@import 'var.less';
+@import 'iconfont.css';
+@import 'transition.less';
+/*@import 'public.less';*/
+@import 'icon.less';
+
+
+.f-flex {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.f-item {
+  position: relative;
+  flex: 1;
+}
+
+.f-item-2 {
+  position: relative;
+  flex: 2;
+}
+
+.f-item-3 {
+  position: relative;
+  flex: 3;
+}
+
+.f-item-4 {
+  position: relative;
+  flex: 4;
+}
+
+.f-item-7 {
+  position: relative;
+  flex: 7;
+}
+.f-txt-center{
+  text-align: center;
+}
+.f-txt-left{
+  text-align: left;
+}
+.f-txt-right{
+   text-align: right;
+}
+
+.line{
+  height:10px;
+  background-color: #f4f4f4;
+}
+.warn{
+  color:@warn;
+  font-size: @tinySize;
+}
+
+.auto-font{
+  font-size: @tinySize;
+}

@@ -1,0 +1,133 @@
+<template>
+    <!--<transition name="fade">-->
+    <div id="watchWay" v-if="dateSelect.showDateSelect">
+        <div class="selectGround" @click="cancel" ></div>
+        <div class="selectWay" >
+            <div class="showway change">切换查看方法</div>
+            <div class="showway" @click="selectType('日新增')">日新增</div>
+            <div class="showway" @click="selectType('月累计')">月累计</div>
+            <div class="showway" @click="selectType('年累计')">年累计</div>
+            <div class="showway" @click="setDate">其他时间段</div>
+            <div class="showway cancel" @click="cancel">取消</div>
+        </div>   
+    </div>
+    <!--</transition>-->
+</template>
+<script>
+// 注册全局变量Calendar
+import Vue from 'vue'
+import Calendar from "./PickerTime/modules/index"
+Vue.use(Calendar);
+
+// 要使用store的方法，就需要引入Vuex的组件
+import {mapState} from 'vuex'
+export default {
+  name: 'selectDate',
+  methods:{
+       setDateSelect(updateTimeSelect,showDateSelect,startTime,endTime){
+            //想要使用vuex中state变量声明的模块，需要重新加载初始值
+            let dateSelect={
+                    updateTimeSelect:updateTimeSelect,
+                    showDateSelect:showDateSelect,
+                    startTime:startTime,
+                    endTime:endTime
+                }; 
+            // 如果修改了变量的值，通过以下方法存储到store中
+            this.$store.commit('dateSelect',dateSelect)
+       },
+        setDate(){
+            let _this= this;//改变全局变量中this的指向
+            this.$calendar.show({
+                year:[1990,2050],  //年份的范围,如果初始化的年份不在这个范围，会自动选最小的年份
+                // endTime:'2020-2-12',  //终止的日期，这个要在year的范围里面，不然没用
+                // date:'2017-12-01',  //初始化的日期
+                date1:"",
+                date2:"",
+                onNext(startTime){
+                    _this.setDateSelect(_this.dateSelect.updateTimeSelect,false,startTime,_this.dateSelect.endTime);
+                    _this.selectType(_this.dateSelect.startTime +'至'+_this.dateSelect.endTime)
+                   
+                },
+                onOk(endTime){
+                      _this.setDateSelect(_this.dateSelect.updateTimeSelect,false,_this.dateSelect.startTime,endTime);
+                       _this.selectType(_this.dateSelect.startTime +'至'+_this.dateSelect.endTime)
+                },
+            });  
+            this.setDateSelect(this.dateSelect.updateTimeSelect,false,this.dateSelect.startTime,this.dateSelect.endTime);
+        },
+        cancel(){
+            this.setDateSelect(this.dateSelect.updateTimeSelect,false,this.dateSelect.startTime,this.dateSelect.endTime);
+
+        },
+        // 数据实时渲染
+        selectType(type){
+             this.setDateSelect(type,false,this.dateSelect.startTime,this.dateSelect.endTime);
+        }
+    },
+    computed:{
+        // 数据发生变化时直接存储到store 中的state
+        ...mapState({
+            dateSelect:state=>state.dateSelect
+        })
+    }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var.less';
+/*.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+  -webkit-transition: opacity .3s;
+  opacity: 1
+}*/
+.fade-enter, .fade-leave-to /* .fade-leave-active 在低于版本 2.1.8 中 */ {
+  opacity: 0
+}
+#app{
+    position: relative;
+}
+#watchWay{
+    width:100%;
+    height: auto;
+    .selectGround{
+        width:100%;
+        height:100%;
+        position: fixed;
+        left:0;
+        top:0;
+        background-color: #000;
+        z-index:998;
+        opacity: 0.5;
+    }
+    .selectWay{
+        width: 100%;
+        height: auto;
+        position: fixed;
+        left:0;
+        bottom:65px;
+        z-index:1000;
+        line-height: 44px;
+        text-align: center;
+        background-color: white;
+        .showway{
+        position:relative;
+        &:after {
+            .setTopLine();
+        }
+        }
+        .change{
+            color: #999999;
+        }
+        .cancel{
+            width:100%;
+            height: 50px;
+            line-height: 50px;
+            position:fixed;
+            left: 0;
+            bottom: 0;
+            z-index:1000;
+            background-color: white;
+        }    
+    }
+}
+</style>

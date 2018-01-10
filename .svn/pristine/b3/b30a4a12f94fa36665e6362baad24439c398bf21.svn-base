@@ -1,0 +1,105 @@
+
+
+//比较数值，有0或''的值转化成'-'
+const transformVal = (val) => {
+  for (var y in val) {
+    if (val[y] == 0 || val[y] == '') {
+      val[y] = '-';
+    }
+  }
+}
+
+//添加对应链接
+const indexLinkTo = (x) => {
+  switch (x.busName) {
+    //销售
+    case '线索':
+      x.link = './saleXianSuoArea';
+      break;
+    case '来店批次':
+      x.link = './saleLaiDianArea';
+      break;
+    case '新增意向':
+      x.link = './saleYiXiangArea';
+      break;
+    case '订单':
+      x.link = './saleDingdanArea';
+      break;
+    case '开票':
+      x.link = './saleKaiPiaoArea';
+      break;
+    case '交车':
+      x.link = './saleJiaoCheArea';
+      break;
+    case '提车量':
+      x.link = './saleTiCheLiangArea';
+      break;
+    case '提车金额':
+      x.link = './saleTiCheJinArea';
+      break;
+    case '订单金额':
+      x.link = './saleDingDanJinArea';
+      break;
+    case '开票金额':
+      x.link = './saleKaiPiaoJinArea';
+      break;
+      //库存
+    case '在库':
+      x.link = './stockZaiKuArea';
+      break;
+    case '在途':
+      x.link = './stockZaiTuArea';
+      break;
+    case '可供销':
+      x.link = './stockGongXiaoArea';
+      break;
+    case '在库金额':
+      x.link = './stockZaiKuJinArea';
+      break;
+      //售后
+    case '营收':
+      x.link = './stockYingShouArea';
+      break;
+    case '回厂台次':
+      x.link = './stockHuiChangArea';
+      break;
+    case '工单数':
+      x.link = './stockGongDanArea';
+      break;
+    case '备件订货金额':
+      x.link = './stockBeiJianDingJinArea';
+      break;
+    case '保有客户':
+      x.link = './stockBaoYouKeArea';
+      break;
+    case '备件库存金额':
+      x.link = './stockBeiJianKuJinArea';
+      break;
+      //保险
+    case '新保台次':
+      x.link = './stockXinBaoArea';
+      break;
+    case '新保金额':
+      x.link = './stockXinBaoJinArea';
+      break;
+    case '续保台次':
+      x.link = './stockXuBaoArea';
+      break;
+    case '续保金额':
+      x.link = './stockXuBaoJinArea';
+      break;
+    default:
+      break;
+  }
+}
+
+
+//处理数据
+const dealWithData = (x) => {
+  transformVal(x); //比较数值，有0或''的值转化成'-'
+  indexLinkTo(x); //添加对应链接
+}
+
+export default {
+  dealWithData
+}

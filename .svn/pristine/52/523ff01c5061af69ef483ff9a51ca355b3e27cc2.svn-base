@@ -1,0 +1,69 @@
+import Vue from 'vue'
+import Router from 'vue-router'
+import HelloWorld from '@/components/HelloWorld'
+import personnalCenter from '@/pages/personnalCenter'
+import login from '@/pages/login'
+import index from '@/pages/index'
+import indexSale from '@/pages/indexSale' //销售
+import indexStock from '@/pages/indexStock' //库存
+import indexService from '@/pages/indexService' //售后
+import indexInsurance from '@/pages/indexInsurance' //保险
+import saleLargeArea from '@/pages/saleLargeArea' //大区
+
+Vue.use(Router)
+
+export default new Router({
+  mode: 'history',
+  routes: [{
+      path: '/',
+      name: 'login',
+      meta: { title: '登录' },
+      component: login
+    },
+    {
+      path: '/index',
+      name: 'index',
+      meta: { title: '经销商集团' },
+      component: index,
+      children: [{
+          path: '/indexSale',
+          meta: { title: '经销商集团' },
+          component: indexSale
+        },
+        {
+          path: '/indexStock',
+          meta: { title: '经销商集团' },
+          component: indexStock
+        },
+        {
+          path: '/indexService',
+          meta: { title: '经销商集团' },
+          component: indexService
+        },
+        {
+          path: '/indexInsurance',
+          meta: { title: '经销商集团' },
+          component: indexInsurance
+        }
+      ]
+    },
+    {
+      path: '/saleLargeArea',
+      name: 'saleLargeArea',
+      meta: { title: '线索'},
+      component: saleLargeArea
+    },
+    {
+      path: '/HelloWorld',
+      name: 'HelloWorld',
+      meta: { title: 'HelloWorld' },
+      component: HelloWorld
+    },
+    {
+      path: '/personnalCenter',
+      name: 'personnalCenter',
+      title: '个人中心',
+      component: personnalCenter
+    },
+  ]
+})

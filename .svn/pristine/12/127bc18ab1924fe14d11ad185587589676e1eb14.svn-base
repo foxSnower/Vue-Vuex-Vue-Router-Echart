@@ -1,0 +1,110 @@
+<template>
+  <div>
+    <img src="../assets/img/login.jpg">
+    <div class="form-box">
+      <i class="iconfont icon-info"></i>
+      <input name="username" maxlength="25" @blur="verify('username')" v-model="username" type="text" placeholder="请输入账户" />
+      <span class="tips warn" v-if="username==''&& usernameShowTips==true">请输入账户</span>
+    </div>
+    <div class="form-box">
+      <i class="iconfont icon-password"></i>
+      <input name="password" maxlength="25" @blur="verify('password')" v-model="password" type="password" placeholder="请输入密码" />
+      <span class="tips warn" v-if="password==''&& passwordShowTips ==true">请输入密码</span>
+    </div>
+    <MyButton text="登录" @click="login"></MyButton>
+    <div class="f-txt-center forget"><span @click="forgetPassword">忘记密码</span>?</div>
+  </div>
+</template>
+<script>
+import api from '@/api/api.js'
+import MyButton from '@/components/MyButton'
+import { mapActions } from 'vuex'
+export default {
+  name: 'login',
+  components: {
+    MyButton
+  },
+  data() {
+    return {
+      usernameShowTips: false,
+      passwordShowTips: false,
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    ...mapActions(['updateToast']),
+    verify(val) {
+      //验证用户密码
+      if (val == 'username') {
+        this.usernameShowTips = true;
+      } else {
+        this.passwordShowTips = true;
+      }
+    },
+    login() {
+      if (this.username == '') {
+        this.usernameShowTips = true;
+        this.updateToast({ showToast: true, title: '请输入您的账户' });
+      } else if (this.password == '') {
+        this.passwordShowTips = true;
+        this.updateToast({ showToast: true, title: '请输入您的密码' });
+      } else {
+        this.$router.push('/indexSale');
+      }
+    },
+    forgetPassword() {
+      this.updateToast({ showToast: true, title: '当当,还未开放！' });
+    }
+  }
+}
+
+</script>
+<style lang="less" scoped="scoped">
+@import '../styles/var';
+.form-box {
+  margin: 20px;
+  position: relative;
+  border-bottom: 1px solid #cbcfdc;
+  padding-bottom: 20px;
+  .iconfont {
+    position: absolute;
+    font-size: @normalSize;
+    color: #cbcfdc;
+  }
+  input {
+    text-indent: 30px;
+  }
+  .tips {
+    position: absolute;
+    left: 30px;
+  }
+}
+
+
+.btn {
+  margin: 20px;
+  margin-top: 30px;
+  button {
+    display: block;
+    width: 100%;
+    background-color: @btnColor;
+    border: none;
+    color: #fff;
+    border-radius: 20px;
+    line-height: 44px;
+    font-size: @normalSize;
+    box-shadow: 5px 5px 10px rgba(240, 131, 0, 0.5);
+    outline: none;
+    &:active {
+      background-color: @activeColor;
+    }
+  }
+}
+
+.forget {
+  color: @btnColor;
+  font-size: @littleSize;
+}
+
+</style>

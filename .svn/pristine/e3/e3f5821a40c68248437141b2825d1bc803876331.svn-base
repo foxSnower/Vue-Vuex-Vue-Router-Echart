@@ -1,0 +1,157 @@
+<template>
+  <publicPage :tableData="tableData"></publicPage>
+</template>
+<script>
+import api from '@/api/api.js'
+import { mapState, mapActions } from 'vuex'
+import DealWithData from '@/utils/DealWithData'
+import publicPage from '@/pages/publicPage'
+
+export default {
+  name: 'saleArea',
+  data() {
+    return {
+      tableData: [{
+        head: true,
+        busName: '大区',
+        dayAdd: '日新增',
+        monthAdd: '月累计',
+        monthRate: '达成率',
+        yearAdd: '年累计',
+        yearRate: '达成率',
+        more: 0
+      }],
+      activeTabNameApi: this.$route.query.pageType //获取当前标签页的aPI接口名称，用于区分存贮数据
+    }
+  },
+  components: {
+    publicPage
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.loadPage();
+    })
+  },
+  watch: {
+    //根据选择的标签页加载不同的数据
+    activeTab: function(newVal) {
+      this.initTabInfo(newVal);
+    },
+    dateSelect: function(newVal) {
+      if (newVal.checkWay == '4') {
+        this.initTabInfo(this.activeTab); //监听是否选择的是选择其他时间段，另做处理
+      }
+    },
+  },
+  methods: {
+    ...mapActions(['updateActiveTab']),
+    loadPage() {
+      // this.updateActiveTab(1); //进入此页面，默认按组织查看
+      this.initTabInfo(this.activeTab); //进入上次浏览的标签页
+    },
+    initTabInfo(val) {
+      console.log(1111);
+      let parmes = {};
+      switch (val) { //1按组织 2按品牌 3按车系
+        case 1: //先改变当前标签页的aPI接口名称，再请求数据
+          this.activeTabNameApi = this.$route.query.pageType; //接口名称
+          parmes = DealWithData.areaOrgInParame(); //请求的参数，DealWithData中配置
+          parmes.startTime = this.dateSelect.startTime;
+          parmes.endTime = this.dateSelect.endTime;
+          parmes.checkWay = this.dateSelect.checkWay;
+          this.getAPI(parmes);
+          break;
+        case 2:
+          this.activeTabNameApi = this.$route.query.pageType + '_BRAND';
+          parmes = DealWithData.areaOrgInParame(); //请求的参数，DealWithData中配置
+          this.getAPI(parmes);
+          break;
+        case 3:
+          this.activeTabNameApi = this.$route.query.pageType + '_CAR';
+          parmes = DealWithData.areaOrgInParame(); //请求的参数，DealWithData中配置
+          this.getAPI(parmes);
+          break;
+        default:
+          break;
+      }
+    },
+    getAPI(parmes) {
+      let pageType = this.activeTabNameApi; //利用链接参数指定请求的接口
+      console.log(pageType);
+      console.log(parmes);
+      // debugger
+      if (this[pageType] == null || this.dateSelect.checkWay == '4') { //state 如果为null 说明第一次进入，请求后台数据
+        api[pageType](parmes).then(res => {
+          if (res.status == '0') {
+            let commitType = this.activeTabNameApi;
+            this.$store.commit(commitType, res);
+            this.dealData(res);
+          } else {
+            console.log(res.message);
+          }
+        })
+      } else {
+        this.dealData(this[pageType]);
+      }
+    },
+    dealData(res) {
+      this.tableData.splice(1, 10000); //初始化数据
+      res.data.forEach((x, index) => {
+        DealWithData.dealWithSaleAreaData(x); //处理数据，品牌与车系没有点击事件
+        this.tableData.push(x);
+      })
+    }
+  },
+  computed: {
+    //activeTab页签
+    ...mapState({
+      activeTab: state => state.activeTab,
+      dateSelect: state => state.dateSelect,
+
+      SALE_XIANSUO_AREA: state => state.SALE_XIANSUO_AREA,
+      SALE_LAIDIAN_AREA: state => state.SALE_LAIDIAN_AREA,
+      SALE_YIXIANG_AREA: state => state.SALE_YIXIANG_AREA,
+      SALE_DINGDAN_AREA: state => state.SALE_DINGDAN_AREA,
+      SALE_KAIPIAO_AREA: state => state.SALE_KAIPIAO_AREA,
+      SALE_JIAOCHE_AREA: state => state.SALE_JIAOCHE_AREA,
+      SALE_TICHE_AREA: state => state.SALE_TICHE_AREA,
+      SALE_TICHEJIN_AREA: state => state.SALE_TICHEJIN_AREA,
+      SALE_DINGDANJIN_AREA: state => state.SALE_DINGDANJIN_AREA,
+      SALE_KAIPIAOJIN_AREA: state => state.SALE_KAIPIAOJIN_AREA,
+
+      SALE_XIANSUO_AREA_BRAND: state => state.SALE_XIANSUO_AREA_BRAND,
+      SALE_LAIDIAN_AREA_BRAND: state => state.SALE_LAIDIAN_AREA_BRAND,
+      SALE_YIXIANG_AREA_BRAND: state => state.SALE_YIXIANG_AREA_BRAND,
+      SALE_DINGDAN_AREA_BRAND: state => state.SALE_DINGDAN_AREA_BRAND,
+      SALE_KAIPIAO_AREA_BRAND: state => state.SALE_KAIPIAO_AREA_BRAND,
+      SALE_JIAOCHE_AREA_BRAND: state => state.SALE_JIAOCHE_AREA_BRAND,
+      SALE_TICHE_AREA_BRAND: state => state.SALE_TICHE_AREA_BRAND,
+      SALE_TICHEJIN_AREA_BRAND: state => state.SALE_TICHEJIN_AREA_BRAND,
+      SALE_DINGDANJIN_AREA_BRAND: state => state.SALE_DINGDANJIN_AREA_BRAND,
+      SALE_KAIPIAOJIN_AREA_BRAND: state => state.SALE_KAIPIAOJIN_AREA_BRAND,
+
+      SALE_XIANSUO_AREA_CAR: state => state.SALE_XIANSUO_AREA_CAR,
+      SALE_LAIDIAN_AREA_CAR: state => state.SALE_LAIDIAN_AREA_CAR,
+      SALE_YIXIANG_AREA_CAR: state => state.SALE_YIXIANG_AREA_CAR,
+      SALE_DINGDAN_AREA_CAR: state => state.SALE_DINGDAN_AREA_CAR,
+      SALE_KAIPIAO_AREA_CAR: state => state.SALE_KAIPIAO_AREA_CAR,
+      SALE_JIAOCHE_AREA_CAR: state => state.SALE_JIAOCHE_AREA_CAR,
+      SALE_TICHE_AREA_CAR: state => state.SALE_TICHE_AREA_CAR,
+      SALE_TICHEJIN_AREA_CAR: state => state.SALE_TICHEJIN_AREA_CAR,
+      SALE_DINGDANJIN_AREA_CAR: state => state.SALE_DINGDANJIN_AREA_CAR,
+      SALE_KAIPIAOJIN_AREA_CAR: state => state.SALE_KAIPIAOJIN_AREA_CAR,
+
+    }),
+    // //增加区域内链接属性
+    // computedTableData() {
+    //   let tableData = this.tableData;
+    //   tableData.forEach((x, index) => {
+    //     x.link = './saleLittleArea';
+    //     x.pageType = this.$route.query.pageType;
+    //   })
+    //   return tableData
+    // }
+  }
+}
+
+</script>

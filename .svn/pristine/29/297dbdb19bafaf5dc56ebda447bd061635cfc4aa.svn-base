@@ -1,0 +1,73 @@
+<template>
+  <transition name="toastTransition">
+    <div class="toast" v-if="show">
+      {{toast.title}}
+    </div>
+  </transition>
+</template>
+<script>
+export default {
+  name: 'toast',
+  props: {
+    toast: {
+      title: {
+        type: String,
+        default: '提示信息'
+      },
+      showToast: {
+        type: Boolean,
+        default: false
+      }
+    }
+  },
+  watch: {
+    show(showToast) {
+      if (showToast) {
+        setTimeout(() => {
+          this.$store.commit('updateToast', {
+            showToast: false
+          })
+        }, 1000)
+      }
+    }
+  },
+  computed: {
+    show() {
+      return this.toast.showToast
+    }
+  }
+}
+
+</script>
+<style scoped="scoped">
+.toast {
+  position: fixed;
+  width: 80%;
+  height: 40px;
+  left: 50%;
+  top: 50%;
+  margin-left: -40%;
+  margin-top: -20px;
+  text-align: center;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  line-height: 40px;
+  border-radius: 5px;
+  font-size: 1.4rem;
+}
+
+.toastTransition-enter-active,
+.toastTransition-leave-active {
+  transition: all .5s;
+}
+
+.toastTransition-enter {
+  transform: scaleY(-1);
+}
+
+.toastTransition-leave-to {
+  transform: scale(.3);
+  opacity: 0;
+}
+.flipy { transform: rotateX(180deg); }
+</style>
